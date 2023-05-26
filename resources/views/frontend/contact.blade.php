@@ -14,7 +14,8 @@
                         <div class="col-12">
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb mb-0 d-inline-flex bg-transparent p-0">
-                                    <li class="breadcrumb-item"><a href="{{ route('front.index') }}">{{ __('Home') }}</a>
+                                    <li class="breadcrumb-item"><a
+                                            href="{{ route('front.index') }}">{{ __('uk') }}</a>
                                     </li>
                                     <li class="breadcrumb-item active" aria-current="page">{{ __('Contact') }}</li>
                                 </ol>
@@ -91,8 +92,9 @@
                                         <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label>{{ __('Your Email') }}:</label>
-                                                <input type="email" class="form-control bg-white @error('email') is-invalid @enderror" id="email"
-                                                    name="email" placeholder="{{ __('Email Address ') }}">
+                                                <input type="email"
+                                                    class="form-control bg-white @error('email') is-invalid @enderror"
+                                                    id="email" name="email" placeholder="{{ __('Email Address ') }}">
                                             </div>
                                         </div>
                                         <div class="col-md-12">
@@ -130,32 +132,79 @@
                             </div>
                         </div>
                         <div class="col-lg-5 col-md-5">
-                            <h3 class="down-line mb-5">{{ __('Get In Touch') }}</h3>
-                            <div class="d-flex mb-3">
-                                <ul>
-                                    @if ($ps->street != null)
-                                        <li class="mb-3">
-                                            <strong>{{ __('Office Address') }} :</strong><br> {{ $ps->street }}
-                                        </li>
-                                    @endif
-                                    @if ($ps->phone != null)
-                                        <li class="mb-3">
-                                            <strong>Contact Number :</strong><br> {{ $ps->phone }}
-                                        </li>
-                                    @endif
-                                    @if ($ps->fax != null)
-                                        <li class="mb-3">
-                                            <strong>Fax :</strong><br> {{ $ps->fax }}
-                                        </li>
-                                    @endif
-                                    @if ($ps->email != null)
-                                        <li class="mb-3">
-                                            <strong>{{ __('Email Address') }} :</strong><br>
-                                            <p class="email">{{ $ps->email }}</p>
-                                        </li>
-                                    @endif
-                                </ul>
+
+                            <h3 class="down-line mb-4">{{ __('Get In Touch') }}</h3>
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="uk-tab" data-bs-toggle="tab"
+                                        data-bs-target="#uk" type="button" role="tab"
+                                        aria-controls="uk" aria-selected="true">United Kingdom</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="bangladesh-tab" data-bs-toggle="tab"
+                                        data-bs-target="#bangladesh" type="button" role="tab" aria-controls="bangladesh"
+                                        aria-selected="false">Bangladesh</button>
+                                </li>
+                            </ul>
+                            <div class="tab-content" id="myTabContent">
+                                <div class="tab-pane fade show active" id="uk" role="tabpanel"
+                                    aria-labelledby="uk-tab">
+                                    <div class="d-flex p-4">
+                                        <ul>
+                                            @if ($ps->street != null)
+                                                <li class="mb-3">
+                                                    <strong>{{ __('Office Address') }} :</strong><br> {{ $ps->street }}
+                                                </li>
+                                            @endif
+                                            @if ($ps->phone != null)
+                                                <li class="mb-3">
+                                                    <strong>Contact Number :</strong><br> {{ $ps->phone }}
+                                                </li>
+                                            @endif
+                                            @if ($ps->fax != null)
+                                                <li class="mb-3">
+                                                    <strong>Fax :</strong><br> {{ $ps->fax }}
+                                                </li>
+                                            @endif
+                                            @if ($ps->email != null)
+                                                <li class="mb-3">
+                                                    <strong>{{ __('Email Address') }} :</strong><br>
+                                                    <p class="email">{{ $ps->email }}</p>
+                                                </li>
+                                            @endif
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="bangladesh" role="tabpanel" aria-labelledby="bangladesh-tab">
+                                    <div class="d-flex p-4">
+                                        <ul>
+                                            @if ($ps->street_BD != null)
+                                                <li class="mb-3">
+                                                    <strong>{{ __('Office Address') }} :</strong><br> {{ $ps->street_BD }}
+                                                </li>
+                                            @endif
+                                            @if ($ps->phone_BD != null)
+                                                <li class="mb-3">
+                                                    <strong>Contact Number :</strong><br> {{ $ps->phone_BD }}
+                                                </li>
+                                            @endif
+                                            @if ($ps->fax_BD != null)
+                                                <li class="mb-3">
+                                                    <strong>Fax :</strong><br> {{ $ps->fax_BD }}
+                                                </li>
+                                            @endif
+                                            @if ($ps->contact_email_BD != null)
+                                                <li class="mb-3">
+                                                    <strong>{{ __('Email Address') }} :</strong><br>
+                                                    <p class="email">{{ $ps->contact_email_BD }}</p>
+                                                </li>
+                                            @endif
+                                        </ul>
+                                    </div>
+                                </div>
+                               
                             </div>
+
 
                         </div>
                     </div>

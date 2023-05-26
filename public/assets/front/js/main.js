@@ -254,9 +254,14 @@
 		$(".category_select").on("change", function () {
 			var val = $(this).val();
 			$("#category_id").val(val);
+			var catType = document.getElementById('selectType').value;
+			var routeCheck = "/category/";
+			if (catType=='service') {
+				routeCheck = "/service_category/"
+			}
 			$("#searchForm").attr(
 				"action",
-				mainurl + "/category/" + $(this).val()
+				mainurl + routeCheck + $(this).val()
 			);
 		});
 
@@ -1239,9 +1244,14 @@
 		$(".category_select").on("change", function () {
 			var val = $(this).val();
 			$("#category_id").val(val);
+			var catType = document.getElementById('selectType').value;
+			var routeCheck = "/category/";
+			if (catType=='service') {
+				routeCheck = "/service_category/"
+			}
 			$("#searchForm").attr(
 				"action",
-				mainurl + "/category/" + $(this).val()
+				mainurl + routeCheck + $(this).val()
 			);
 		});
 

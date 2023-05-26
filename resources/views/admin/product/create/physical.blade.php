@@ -107,7 +107,7 @@
                                                             value="{{ $cat->id }}">{{ $cat->name }}</option>
                                                     @endforeach
                                                 </select>
-                                                <input type="hidden" id="category_type" value="" name="category_type">
+                                                <input type="text" id="category_type" value="" name="category_type">
                                             </div>
                                         </div>
 
@@ -933,7 +933,6 @@
 
             } else {
                 document.getElementById('category_type').value = 2;
-
             }
         }
     </script>

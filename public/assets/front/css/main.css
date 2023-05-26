@@ -484,6 +484,12 @@ background-color: var(--light-green) !important;
 .services-page  .d-flex.justify-content-center .product-search-one{
     width: 80%;
 }
+
+.modal .modal-dialog span.select2.select2-container{
+  width: 100% !important;
+  margin: 20px auto;
+}
+
 /* responsiveness  by huma*/
 @media (max-width: 2560px) {
   .card-img-sell-product {

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Front;
 
-use App\{Models\Product, Models\Category, Models\Subcategory, Models\Childcategory, Models\Report};
+use App\{Models\Product, Models\Category, Models\ServiceCategory, Models\Subcategory, Models\Childcategory, Models\Report};
 use App\Models\Country;
 use App\Models\State;
 use App\Models\UserService;
@@ -15,12 +15,12 @@ class CatalogController extends FrontBaseController
 
     public function categories()
     {
-        return view('frontend.products',compact('prods'));
+        return view('frontend.products', compact('prods'));
     }
 
     // -------------------------------- CATEGORY SECTION ----------------------------------------
     //aready type existed thats why kind was used  --added by huma
-    public function category(Request $request, $slug = null, $slug1 = null, $slug2 = null, $slug3 = null, $kind= null)
+    public function category(Request $request, $slug = null, $slug1 = null, $slug2 = null, $slug3 = null, $kind = null)
     {
         if ($request->view_check) {
             session::put('view', $request->view_check);
@@ -141,7 +141,6 @@ class CatalogController extends FrontBaseController
             ->when(empty($sort), function ($query, $sort) {
                 return $query->latest('id');
             });
-           
 
         $prods = $prods->where(function ($query) use ($cat, $subcat, $childcat, $type, $request) {
             $flag = 0;
@@ -232,7 +231,7 @@ class CatalogController extends FrontBaseController
             $data['ajax_check'] = 1;
             return view('frontend.ajax.category', $data);
         }
-            return view('frontend.products', $data);
+        return view('frontend.products', $data);
     }
 
     public function servicecategory(Request $request, $slug = null, $slug1 = null, $slug2 = null, $slug3 = null)
@@ -242,7 +241,6 @@ class CatalogController extends FrontBaseController
         }
 
         //   dd(session::get('view'));
-
         $cat = null;
         $subcat = null;
         $childcat = null;
@@ -259,7 +257,7 @@ class CatalogController extends FrontBaseController
         $type = $request->has('type') ?? '';
 
         if (!empty($slug)) {
-            $cat = Category::where('slug', $slug)
+            $cat = ServiceCategory::where('slug', $slug)
                 ->with([
                     'attributes' => function ($query) {
                         $query->where('type', 2);
@@ -444,9 +442,9 @@ class CatalogController extends FrontBaseController
             $data['ajax_check'] = 1;
             return view('frontend.ajax.service_category', $data);
         }
-        //s added by huma 
+        //s added by huma
         $data['categoryType'] = 'service';
-        //e added by huma 
+        //e added by huma
 
         return view('frontend.services', $data);
     }

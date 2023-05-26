@@ -477,10 +477,9 @@ class ProductController extends AdminBaseController
           $jsonAttr = json_encode($attrArr);
           $input['attributes'] = $jsonAttr;
         }
-
+        $input['category_type'] = $request->category_type;
         // Save Data
         $data->fill($input)->save();
-
         // Set SLug
         $prod = Product::find($data->id);
         if($prod->type != 'Physical'){

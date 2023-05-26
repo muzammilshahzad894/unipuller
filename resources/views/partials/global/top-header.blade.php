@@ -104,7 +104,7 @@
                             <div class="select-appearance-none categori-container mx-2" id="catSelectForm">
                                 <span id="productCategory">
                                     <select name="category" class="form-control select2 category_select ">
-                                        <option selected disabled>{{ __('Select Category') }}</option>
+                                        <option selected disabled>{{ __('Select Category im here') }}</option>
                                         @foreach (DB::table('categories')->where('language_id', $langg->id)->where('status', 1)->get() as $data)
                                             <option value="{{ $data->slug }}"
                                                 {{ Request::route('category') == $data->slug ? 'selected' : '' }}>
@@ -118,7 +118,7 @@
                                         <option selected disabled>{{ __('Select Category') }}</option>
                                         @foreach (DB::table('service_categories')->where('language_id', $langg->id)->where('status', 1)->get() as $data)
                                             <option value="{{ $data->slug }}"
-                                                {{ Request::route('category') == $data->slug ? 'selected' : '' }}>
+                                                {{ Request::route('service_category') == $data->slug ? 'selected' : '' }}>
                                                 {{ $data->name }}
                                             </option>
                                         @endforeach
@@ -231,7 +231,7 @@
                                         <option selected disabled>{{ __('Select Service Category') }}</option>
                                         @foreach (DB::table('service_categories')->where('language_id', $langg->id)->where('status', 1)->get() as $data)
                                             <option value="{{ $data->slug }}"
-                                                {{ Request::route('category') == $data->slug ? 'selected' : '' }}>
+                                                {{ Request::route('service_category') == $data->slug ? 'selected' : '' }}>
                                                 {{ $data->name }}
                                             </option>
                                         @endforeach
@@ -341,13 +341,13 @@
         var type = document.getElementById("selectType").value;
         document.getElementById("catSelectForm").style.display = "block"
         var form = document.getElementById("searchForm");
-        console.log('form', form.action);
+        console.log('form, type', form.action, type);
         // Change the action attribute (form path)
         if (type == 'service') {
             document.getElementById("serviceCategory").style.display = "block"
             document.getElementById("productCategory").style.display = "none"
             form.action =
-                "{{ route('front.service_category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}";
+                "{{ route('front.service_category', [Request::route('service_category'), Request::route('subcategory'), Request::route('childcategory')]) }}";
             console.log('form', form.action);
 
 

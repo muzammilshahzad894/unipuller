@@ -1,7 +1,7 @@
 @extends('layouts.front')
 @section('content')
     <div class="services-page">
-       
+
         @includeIf('partials.global.common-header')
         <!-- breadcrumb -->
         <!-- <div class="full-row bg-light overlay-dark py-5" style="background-image: url({{ $gs->breadcrumb_banner ? asset('assets/images/' . $gs->breadcrumb_banner) : asset('assets/front/images/service.jpg') }}); background-position: center center; background-size: cover;"> -->
@@ -68,39 +68,28 @@
                     <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div
-                        class="products-header d-flex justify-content-between align-items-center py-10 px-20 bg-light md-mt-30">
-                        <div class="products-header-left d-flex align-items-center">
-                            <div class="products-header">
-                                <div class="products-header-right justify-content-first">
-
-                                    <div class="mb-3 mx-2">
-                                        <select name="country_id[]" class="form-control select2 country" id="country_id_modal"
-                                            onchange="countryChangeModal(this)">
-                                            <option value="" disabled selected>Select Country</option>
-                                            @foreach ($countries as $country)
-                                                <option data-href="{{ route('front-city-load', $country->id) }}"
-                                                    value="{{ $country->id }}">
-                                                    {{ $country->country_name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-
-                                    <div class="mb-3 city-div-modal" style="display:none">
-                                        <select name="city_id[]" id="citylist_modal" class="select2" multiple>
-                                            <option value="all">All City</option>
-
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="">
+                        <select name="country_id[]" class="form-control select2 country" id="country_id_modal"
+                            onchange="countryChangeModal(this)">
+                            <option value="" disabled selected>Select Country</option>
+                            @foreach ($countries as $country)
+                                <option data-href="{{ route('front-city-load', $country->id) }}"
+                                    value="{{ $country->id }}">
+                                    {{ $country->country_name }}</option>
+                            @endforeach
+                        </select>
                     </div>
 
+                    <div class="city-div-modal" style="display:none">
+                        <select name="city_id[]" id="citylist_modal" class="select2" multiple>
+                            <option value="all">All City</option>
+
+                        </select>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     {{-- <button type="button" class="btn btn-secondary close" data-bs-dismiss="modal">Close</button> --}}
-                    <button type="button" class="btn btn-primary">Selected</button>
+                    <button type="button" class="btn btn-primary">Search</button>
                 </div>
             </div>
         </div>
@@ -148,10 +137,11 @@
 
 
         // when dynamic attribute changes
-        $(".attribute-input, #sortby, #pageby, #country_id,#country_id_modal,#citylist_modal, #citylist").on('change', function() {
-            $(".ajax-loader").show();
-            filter();
-        });
+        $(".attribute-input, #sortby, #pageby, #country_id,#country_id_modal,#citylist_modal, #citylist").on('change',
+            function() {
+                $(".ajax-loader").show();
+                filter();
+            });
 
         function countryChangeModal(data) {
             var link = $(data).find(':selected').attr('data-href');
@@ -164,6 +154,7 @@
                 $(".city-div_modal").css("display", "none");
             }
         }
+
         function countryChange(data) {
             var link = $(data).find(':selected').attr('data-href');
             if (link != "") {
