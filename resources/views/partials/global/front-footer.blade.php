@@ -7,15 +7,38 @@
                 <p class="mb-0 ">
                     <span class="pr-2"><a class="" href="{{ route('front.vendor', 'about') }}">About
                             {{ config('app.name') }}.com</a></span>
-                   <span class="px-2">|</span> <span class=""><a class="" href="{{route('front.contact')}}">Help & Support</a></span>
-                   <span class="px-2">|</span> <span class=""><a class="" href="{{route('front.contact')}}">Careers</a></span>
-                   <span class="px-2">|</span> <span class=""><a class="" href="{{route('front.contact')}}">Contact Us</a></span>
+                    <span class="px-2">|</span> <span class=""><a class=""
+                            href="{{ route('front.contact') }}">Help & Support</a></span>
+                    <span class="px-2">|</span> <span class=""><a class=""
+                            href="{{ route('front.contact') }}">Careers</a></span>
+                    <span class="px-2">|</span> <span class=""><a class=""
+                            href="{{ route('front.contact') }}">Contact Us</a></span>
                 </p>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-12 col-12 d-flex justify-content-md-end justify-content-sm-center align-items-center">
+            <div
+                class="col-lg-4 col-md-4 col-sm-12 col-12 d-flex justify-content-md-end justify-content-sm-center align-items-center">
                 <h6 class="mb-0 px-2">Pay with strip</h6>
-                <a href=""><img src="{{ asset('assets/front/images/strip.png') }}" class="rounded-circle" width="70" alt=""
-                        srcset=""></a>
+                <a href=""><img src="{{ asset('assets/front/images/strip.png') }}" class="rounded-circle"
+                        width="70" alt="" srcset=""></a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 justify-content-md-start justify-content-sm-center">
+                <h6 class="mb-0">Become a seller
+                    @if ($gs->reg_vendor == 1)
+                        @if (Auth::check())
+                            @if (Auth::guard('web')->user()->is_vendor == 2)
+                                <a href="{{ route('vendor.dashboard') }}" class="sell-btn ">
+                                    {{ __('Sell') }}</a>
+                            @else
+                                <a href="{{ route('user-package') }}" class="sell-btn "> {{ __('Sell') }}</a>
+                            @endif
+                        @else
+                            <a href="{{ route('vendor.login') }}" class="sell-btn "> {{ __('Sell') }}</a>
+                        @endif
+                    @endif
+                </h6>
+
             </div>
         </div>
         <div class="row  py-2">
@@ -24,8 +47,10 @@
                 <p class="mb-0 ">
                     <span class="pr-2"><a class=""
                             href="{{ route('front.vendor', 'about') }}">Advertising</a></span>
-                   <span class="px-2">|</span> <span class=""><a class="" href="https://slippa.unipuller.uk">Social Media</a></span>
-                   <span class="px-2">|</span> <span class=""><a class="" href="">Online Reputation
+                    <span class="px-2">|</span> <span class=""><a class=""
+                            href="https://slippa.unipuller.uk">Social Media</a></span>
+                    <span class="px-2">|</span> <span class=""><a class="" href="">Online
+                            Reputation
                             Management</a></span>
                 </p>
             </div>
@@ -46,12 +71,14 @@
                 <p class="mb-0 ">
                     @foreach (DB::table('pages')->where('language_id', $langg->id)->where('slug', '!=', 'about')->where('footer', '=', 1)->get() as $data)
                         <span><a class=""
-                                href="{{ route('front.vendor', $data->slug) }}">{{ $data->title }}</a></span><span class="px-2">|</span>
+                                href="{{ route('front.vendor', $data->slug) }}">{{ $data->title }}</a></span><span
+                            class="px-2">|</span>
                     @endforeach
                 </p>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-12 col-12 d-flex justify-content-md-end justify-content-sm-center">
-                <p class="mb-0 p-3 bg-green rounded-2 text-white">Advertise here: <span class="advertise-number text-white"> 0000-000-000</span></p>
+                <p class="mb-0 p-3 bg-green rounded-2 text-white">Advertise here: <span
+                        class="advertise-number text-white"> 0000-000-000</span></p>
             </div>
         </div>
         <div class="row  py-2">

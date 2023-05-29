@@ -242,7 +242,22 @@
             </div>
             <div class="col-xxl-3 col-xl-2 col-lg-2 col-6 order-lg-3">
                 <div class="d-flex align-items-center justify-content-end h-100 md-py-10">
-                    <div class="sign-in position-relative font-general my-account-dropdown">
+                    <div class="sign-in my-account-dropdown position-relative">
+                        <a href="my-account.html"
+                            class="has-dropdown d-flex align-items-center text-white text-decoration-none">
+                            <select name="currency" class="currency selectors nice">
+                                @foreach (DB::table('currencies')->get() as $currency)
+                                    <option value="{{ route('front.currency', $currency->id) }}"
+                                        {{ Session::has('currency')? (Session::get('currency') == $currency->id? 'selected': ''): (DB::table('currencies')->where('is_default', '=', 1)->first()->id == $currency->id? 'selected': '') }}>
+                                        {{-- <span class="text-dark">{{ Session::has('currency')? DB::table('currencies')->where('id', '=', Session::get('currency'))->first()->sign: DB::table('currencies')->where('is_default', '=', 1)->first()->sign }}</span> --}}
+                                        {{$currency->sign}}
+                                        {{ $currency->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </a>
+                    </div>
+                     <div class="sign-in position-relative font-general my-account-dropdown ms-2">
                         <a href="my-account.html"
                             class="has-dropdown d-flex align-items-center text-dark text-decoration-none"
                             title="My Account">

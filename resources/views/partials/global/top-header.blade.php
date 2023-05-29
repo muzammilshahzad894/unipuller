@@ -1,5 +1,5 @@
 <div class="top-header font-400 d-none d-lg-block text-general bg-white p-0">
-    <div class="container-fluid">
+    {{-- <div class="container-fluid">
         <div class="row align-items-center justify-content-end">
             <div class="col-12 border-bottom">
                 <ul class="top-links text-general ms-auto  d-flex justify-content-end">
@@ -51,7 +51,7 @@
 
         </div>
 
-    </div>
+    </div> --}}
     <div class="container-fluid middle-nav-bar">
         <div class="row align-items-center justify-content-end  py-3">
             <div class="col-lg-3 sm-mx-none">
@@ -238,9 +238,8 @@
                                     </select>
                                 </span>
                             </div>
-                            <input type="text" id="prod_name2" class="col form-control search-field"
-                                name="search" placeholder="Search Product For"
-                                value="{{ request()->input('search') }}">
+                            <input type="text" id="prod_name2" class="col form-control search-field" name="search"
+                                placeholder="Search Product For" value="{{ request()->input('search') }}">
 
 
                             <button type="submit" name="submit" class="search-submit"><i
@@ -250,6 +249,22 @@
                     </div>
                     <div class="autocomplete">
                         <div id="myInputautocomplete-list" class="autocomplete-items"></div>
+                    </div>
+
+                    <div class="sign-in my-account-dropdown position-relative">
+                        <a href="my-account.html"
+                            class="has-dropdown d-flex align-items-center text-white text-decoration-none">
+                            <select name="currency" class="currency selectors nice">
+                                @foreach (DB::table('currencies')->get() as $currency)
+                                    <option value="{{ route('front.currency', $currency->id) }}"
+                                        {{ Session::has('currency')? (Session::get('currency') == $currency->id? 'selected': ''): (DB::table('currencies')->where('is_default', '=', 1)->first()->id == $currency->id? 'selected': '') }}>
+                                        {{-- <span class="text-dark">{{ Session::has('currency')? DB::table('currencies')->where('id', '=', Session::get('currency'))->first()->sign: DB::table('currencies')->where('is_default', '=', 1)->first()->sign }}</span> --}}
+                                        {{$currency->sign}}
+                                        {{ $currency->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </a>
                     </div>
                     <div class="sign-in my-account-dropdown position-relative">
                         <a href="my-account.html"

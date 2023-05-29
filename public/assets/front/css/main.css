@@ -41,7 +41,7 @@ button.btn.btn-dark {
 }
 
 .top-header .middle-nav-bar .row {
-  background-color: rgba(128, 128, 128, 0.459);
+  background-color: #0F1111;
 }
 form#searchForm {
   border: 1px solid !important;
@@ -54,10 +54,19 @@ select#selectType {
 #catSelectForm {
   display: none;
 }
+/* .top-header  .has-dropdown.d-flex.align-items-center.text-white.text-decoration-none {
+  background-color: white;
+  border-radius: 51px;
+} */
 .top-header select#selectType {
   height: 29px !important;
   border-right: 1px solid grey !important;
   border-radius: 0px !important;
+}
+.top-header select.currency.selectors.nice,
+.ecommerce-header select.currency.selectors.nice
+{
+  padding: 2px;
 }
 .top-header .select2-container--default .select2-selection--single {
   background-color: #fff;
