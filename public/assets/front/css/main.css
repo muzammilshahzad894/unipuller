@@ -50,8 +50,12 @@ select#selectType {
   width: 146px;
 }
 #productCategory,
+#productCategorySticky,
+#serviceCategorySticky,
 #serviceCategory,
-#catSelectForm {
+#catSelectFormSticky,
+#catSelectForm 
+{
   display: none;
 }
 /* .top-header  .has-dropdown.d-flex.align-items-center.text-white.text-decoration-none {
@@ -68,7 +72,8 @@ select#selectType {
 {
   padding: 2px;
 }
-.top-header .select2-container--default .select2-selection--single {
+.top-header .select2-container--default .select2-selection--single,
+.main-nav .select2-container--default .select2-selection--single{
   background-color: #fff;
   border: 0px !important;
   border-right: 1px solid grey !important;

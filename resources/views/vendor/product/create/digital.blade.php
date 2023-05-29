@@ -153,12 +153,16 @@
 													</div>
 												</div>
 												<div class="col-lg-12">
-													<select id="cat" name="category_id" required="">
+													<select id="cat" name="category_id" required=""
+													onchange="getCategoryType()">
 														<option value="">{{ __('Select Category') }}</option>
 														@foreach($cats as $cat)
-															<option data-href="{{ route('vendor-subcat-load',$cat->id) }}" value="{{ $cat->id }}">{{$cat->name}}</option>
+															<option data-href="{{ route('vendor-subcat-load',$cat->id) }}" 
+																data-name="{{ $cat->getTable() }}" value="{{ $cat->id }}">{{$cat->name}}</option>
 														@endforeach
 													</select>
+													<input type="hidden" id="category_type" value="" name="category_type">
+
 												</div>
 											</div>
 	
@@ -554,7 +558,18 @@
 $('.cropme').simpleCropper();
 
 })(jQuery);
+function getCategoryType() {
+            var category = document.getElementById('cat');
+            var selectedOption = category.options[category.selectedIndex];
+            var type = selectedOption.getAttribute("data-name");
+            console.log('type ,selectedOption', type, selectedOption);
+            if (type == "categories") {
+                document.getElementById('category_type').value = 1;
 
+            } else {
+                document.getElementById('category_type').value = 2;
+            }
+        }
 </script>
 
 

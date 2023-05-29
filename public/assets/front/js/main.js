@@ -256,7 +256,7 @@
 			$("#category_id").val(val);
 			var catType = document.getElementById('selectType').value;
 			var routeCheck = "/category/";
-			if (catType=='service') {
+			if (catType=='2') {
 				routeCheck = "/service_category/"
 			}
 			$("#searchForm").attr(
@@ -1246,7 +1246,7 @@
 			$("#category_id").val(val);
 			var catType = document.getElementById('selectType').value;
 			var routeCheck = "/category/";
-			if (catType=='service') {
+			if (catType=='2') {
 				routeCheck = "/service_category/"
 			}
 			$("#searchForm").attr(

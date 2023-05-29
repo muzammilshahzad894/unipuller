@@ -6,6 +6,7 @@ use App\{
     Models\Gallery,
     Models\Product,
     Models\Category,
+    Models\ServiceCategory,
     Models\Currency,
     Models\Attribute,
     Models\Subcategory,
@@ -98,7 +99,10 @@ class ProductController extends VendorBaseController
     //*** GET Request
     public function create($slug)
     {
-        $cats = Category::all();
+        $collection1 = Category::all();
+        $collection2 = ServiceCategory::all();
+        $cats = $collection1->concat($collection2);
+
         $shops = UserShop::where('user_id',$this->user->id)->get();
         $countries = Country::orderby('id', 'desc')->get();
         $sign = $this->curr;
@@ -682,13 +686,13 @@ class ProductController extends VendorBaseController
              $jsonAttr = json_encode($attrArr);
              $input['attributes'] = $jsonAttr;
            }
-
            $input['country_id'] = $request->national_int == 1 ? json_encode($request->single_country_id) : json_encode($request->country_id);
            $input['city_id'] = json_encode($request->city_id);
-           
-            // Save Data
-                $data->fill($input)->save();
 
+        $input['category_type'] = $request->category_type;
+
+            // Save Data
+              $res =   $data->fill($input)->save();
             // Set SLug
 
                 $prod = Product::find($data->id);

@@ -332,23 +332,21 @@
             </div>
             <div class="col-xxl-7 col-xl-6 col-lg-6 col-12 order-lg-2">
                 <div class="product-search-one">
-                    <form id="searchForm" class="search-form form-inline search-pill-shape"
-                        action="{{ route('front.category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}"
-                        method="GET">
+                    <form id="searchForm" class="search-form form-inline search-pill-shape" action=""
+                            method="GET">
 
-                        @if (!empty(request()->input('sort')))
-                            <input type="hidden" name="sort" value="{{ request()->input('sort') }}">
-                        @endif
-                        @if (!empty(request()->input('minprice')))
-                            <input type="hidden" name="minprice" value="{{ request()->input('minprice') }}">
-                        @endif
-                        @if (!empty(request()->input('maxprice')))
-                            <input type="hidden" name="maxprice" value="{{ request()->input('maxprice') }}">
-                        @endif
-                        <input type="text" id="prod_name2" class="col form-control search-field" name="search"
+                            @if (!empty(request()->input('sort')))
+                                <input type="hidden" name="sort" value="{{ request()->input('sort') }}">
+                            @endif
+                            @if (!empty(request()->input('minprice')))
+                                <input type="hidden" name="minprice" value="{{ request()->input('minprice') }}">
+                            @endif
+                            @if (!empty(request()->input('maxprice')))
+                                <input type="hidden" name="maxprice" value="{{ request()->input('maxprice') }}">
+                            @endif
+                            {{-- <input type="text" id="prod_name" class="col form-control search-field " name="search"
                             placeholder="Search Product For" value="{{ request()->input('search') }}">
-
-                        <div class="select-appearance-none categori-container mx-2" id="catSelectForm">
+                        <div class=" categori-container select-appearance-none mx-2" id="serviceSelectForm">
                             <select name="category" class="form-control select2 category_select">
                                 <option selected disabled>{{ __('Select Category') }}</option>
                                 @foreach (DB::table('categories')->where('language_id', $langg->id)->where('status', 1)->get() as $data)
@@ -358,13 +356,54 @@
                                     </option>
                                 @endforeach
                             </select>
-                        </div>
+                        </div> --}}
+                            <div class="select-appearance-none categori-container mx-2" id="typeSelectFormSticky">
+                                <select name="selectType" id="selectTypeSticky" class="form-control  type_select"
+                                    onchange="searchCategorySticky()" required>
+                                    <option value=""> Select Type </option>
+                                    <option value="2"> Service </option>
+                                    <option value="1"> Product </option>
+                                </select>
+                            </div>
+                            <div class="select-appearance-none categori-container mx-2" id="catSelectFormSticky">
+                                <span id="productCategorySticky">
+                                    @php
+                                    $collection1 =DB::table('categories')->where('language_id', $langg->id)->where('status', 1)->get();
+                                    $collection2 =DB::table('service_categories')->where('language_id', $langg->id)->where('status', 1)->get();
+                                    $cats = $collection1->concat($collection2);
+                                @endphp
+                                    <select name="category" class="form-control select2 category_select ">
+                                        <option selected disabled>{{ __('Select Category') }}</option>
+                                        @foreach ( $cats as $data)
+                                            <option value="{{ $data->slug }}"
+                                                {{ Request::route('category') == $data->slug ? 'selected' : '' }}>
+                                                {{ $data->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </span>
+                                <span id="serviceCategorySticky">
+                                    <select name="category" class="form-control select2 category_select ">
+                                        <option selected disabled>{{ __('Select Category') }}</option>
+                                        @foreach (DB::table('service_categories')->where('language_id', $langg->id)->where('status', 1)->get() as $data)
+                                            <option value="{{ $data->slug }}"
+                                                {{ Request::route('service_category') == $data->slug ? 'selected' : '' }}>
+                                                {{ $data->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </span>
+
+                            </div>
+                            <input type="text" id="prod_name2" class="col form-control search-field" name="search"
+                                placeholder="Search Product For" value="{{ request()->input('search') }}">
+                                <input type="hidden" name="searchProduct" value="product">
 
 
-                        <button type="submit" name="submit" class="search-submit"><i
-                                class="flaticon-search flat-mini text-white"></i></button>
+                            <button type="submit" name="submit" class="search-submit"><i
+                                    class="flaticon-search flat-mini text-white"></i></button>
 
-                    </form>
+                        </form>
                 </div>
                 <div class="autocomplete2">
                     <div id="myInputautocomplete-list2" class="autocomplete-items"></div>
@@ -373,3 +412,28 @@
         </div>
     </div>
 </div>
+<script>
+    function searchCategorySticky() {
+        var type = document.getElementById("selectTypeSticky").value;
+        document.getElementById("catSelectFormSticky").style.display = "block"
+        var form = document.getElementById("searchForm");
+        console.log('form, type', form.action, type);
+        // Change the action attribute (form path)
+        if (type == '2') {
+            document.getElementById("serviceCategorySticky").style.display = "block"
+            document.getElementById("productCategorySticky").style.display = "none"
+            form.action =
+                "{{ route('front.service_category', [Request::route('service_category'), Request::route('subcategory'), Request::route('childcategory')]) }}";
+            console.log('form', form.action);
+
+
+        } else {
+            document.getElementById("productCategorySticky").style.display = "block"
+            document.getElementById("serviceCategorySticky").style.display = "none"
+            form.action =
+                "{{ route('front.category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}";
+            console.log('form', form.action);
+        }
+    }
+</script>
+

@@ -97,8 +97,8 @@
                                 <select name="selectType" id="selectType" class="form-control  type_select"
                                     onchange="searchCategory()" required>
                                     <option value=""> Select Type </option>
-                                    <option value="service"> Service </option>
-                                    <option value="product"> Product </option>
+                                    <option value="2"> Service </option>
+                                    <option value="1"> Product </option>
                                 </select>
                             </div>
                             <div class="select-appearance-none categori-container mx-2" id="catSelectForm">
@@ -128,6 +128,7 @@
                             </div>
                             <input type="text" id="prod_name2" class="col form-control search-field" name="search"
                                 placeholder="Search Product For" value="{{ request()->input('search') }}">
+                                <input type="hidden" name="searchProduct" value="product">
 
 
                             <button type="submit" name="submit" class="search-submit"><i
@@ -358,7 +359,7 @@
         var form = document.getElementById("searchForm");
         console.log('form, type', form.action, type);
         // Change the action attribute (form path)
-        if (type == 'service') {
+        if (type == '2') {
             document.getElementById("serviceCategory").style.display = "block"
             document.getElementById("productCategory").style.display = "none"
             form.action =

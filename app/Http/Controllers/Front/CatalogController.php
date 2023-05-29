@@ -240,7 +240,6 @@ class CatalogController extends FrontBaseController
             session::put('view', $request->view_check);
         }
 
-        //   dd(session::get('view'));
         $cat = null;
         $subcat = null;
         $childcat = null;
@@ -255,7 +254,6 @@ class CatalogController extends FrontBaseController
         $country = $request->country_id;
         $city = $request->city_id;
         $type = $request->has('type') ?? '';
-
         if (!empty($slug)) {
             $cat = ServiceCategory::where('slug', $slug)
                 ->with([
@@ -275,176 +273,347 @@ class CatalogController extends FrontBaseController
             $childcat = Childcategory::where('slug', $slug2)->firstOrFail();
             $data['childcat'] = $childcat;
         }
-        $data['latest_services'] = UserService::with('user')
-            ->whereStatus(1)
-
-            ->get()
-            ->reject(function ($item) {
-                if ($item->user_id != 0) {
-                    if ($item->user->is_vendor != 2) {
-                        return true;
-                    }
-                }
-                return false;
-            });
-
-        $services = UserService::when($cat, function ($query, $cat) {
-            return $query->where('category_id', $cat->id);
-        })
-            ->when($subcat, function ($query, $subcat) {
-                return $query->where('subcategory_id', $subcat->id);
-            })
-            ->when($type, function ($query, $type) {
-                return $query
-                    ->with('user')
-                    ->whereStatus(1)
-                    ->whereIsDiscount(1)
-                    ->where('discount_date', '>=', date('Y-m-d'))
-                    ->whereHas('user', function ($user) {
-                        $user->where('is_vendor', 2);
-                    });
-            })
-            ->when($childcat, function ($query, $childcat) {
-                return $query->where('childcategory_id', $childcat->id);
-            })
-            ->when($search, function ($query, $search) {
-                return $query->where('name', 'like', '%' . $search . '%')->orWhere('name', 'like', $search . '%');
-            })
-            ->when($minprice, function ($query, $minprice) {
-                return $query->where('price', '>=', $minprice);
-            })
-            ->when($maxprice, function ($query, $maxprice) {
-                return $query->where('price', '<=', $maxprice);
-            })
-            ->when($country, function ($query, $country) {
-                if (is_array($country)) {
-                    foreach ($country as $key => $coun) {
-                        if ($key == 0) {
-                            $query->where('country_id', '=', $coun);
-                        } else {
-                            $query->orWhere('country_id', '=', $coun);
+        if ($request->searchProduct == 'product') {
+            $data['latest_products'] = Product::with('user')
+                ->whereStatus(1)
+                ->whereLatest(1)
+                ->home($this->language->id)
+                ->get()
+                ->reject(function ($item) {
+                    if ($item->user_id != 0) {
+                        if ($item->user->is_vendor != 2) {
+                            return true;
                         }
                     }
-                }
-            })
-            ->when($city, function ($query, $city) {
-                if (is_array($city)) {
-                    foreach ($city as $key => $cit) {
-                        if ($key == 0) {
-                            $query->where('city_id', '=', $cit);
-                        } else {
-                            $query->orWhere('city_id', '=', $cit);
-                        }
-                    }
-                }
-            })
-            ->when($sort, function ($query, $sort) {
-                if ($sort == 'date_desc') {
-                    return $query->latest('id');
-                } elseif ($sort == 'date_asc') {
-                    return $query->oldest('id');
-                } elseif ($sort == 'price_desc') {
-                    return $query->latest('price');
-                } elseif ($sort == 'price_asc') {
-                    return $query->oldest('price');
-                }
-            })
-            ->when(empty($sort), function ($query, $sort) {
-                return $query->latest('id');
-            });
+                    return false;
+                });
 
-        $services = $services->where(function ($query) use ($cat, $subcat, $childcat, $type, $request) {
-            $flag = 0;
-            if (!empty($cat)) {
-                foreach ($cat->attributes as $key => $attribute) {
-                    $inname = $attribute->input_name;
-                    $chFilters = $request["$inname"];
-
-                    if (!empty($chFilters)) {
-                        $flag = 1;
-                        foreach ($chFilters as $key => $chFilter) {
+            $products = Product::when($cat, function ($query, $cat) {
+                return $query->where('category_id', $cat->id);
+            })
+                ->when($subcat, function ($query, $subcat) {
+                    return $query->where('subcategory_id', $subcat->id);
+                })
+                ->when($type, function ($query, $type) {
+                    return $query
+                        ->with('user')
+                        ->whereStatus(1)
+                        ->whereIsDiscount(1)
+                        ->where('discount_date', '>=', date('Y-m-d'))
+                        ->whereHas('user', function ($user) {
+                            $user->where('is_vendor', 2);
+                        });
+                })
+                ->when($childcat, function ($query, $childcat) {
+                    return $query->where('childcategory_id', $childcat->id);
+                })
+                ->when($search, function ($query, $search) {
+                    return $query->where('name', 'like', '%' . $search . '%')->orWhere('name', 'like', $search . '%');
+                })
+                ->when($minprice, function ($query, $minprice) {
+                    return $query->where('price', '>=', $minprice);
+                })
+                ->when($maxprice, function ($query, $maxprice) {
+                    return $query->where('price', '<=', $maxprice);
+                })
+                ->when($country, function ($query, $country) {
+                    if (is_array($country)) {
+                        foreach ($country as $key => $coun) {
                             if ($key == 0) {
-                                $query->where('attributes', 'like', '%' . '"' . $chFilter . '"' . '%');
+                                $query->where('country_id', '=', $coun);
                             } else {
-                                $query->orWhere('attributes', 'like', '%' . '"' . $chFilter . '"' . '%');
+                                $query->orWhere('country_id', '=', $coun);
+                            }
+                        }
+                    }
+                })
+                ->when($city, function ($query, $city) {
+                    if (is_array($city)) {
+                        foreach ($city as $key => $cit) {
+                            if ($key == 0) {
+                                $query->where('city_id', '=', $cit);
+                            } else {
+                                $query->orWhere('city_id', '=', $cit);
+                            }
+                        }
+                    }
+                })
+                ->when($sort, function ($query, $sort) {
+                    if ($sort == 'date_desc') {
+                        return $query->latest('id');
+                    } elseif ($sort == 'date_asc') {
+                        return $query->oldest('id');
+                    } elseif ($sort == 'price_desc') {
+                        return $query->latest('price');
+                    } elseif ($sort == 'price_asc') {
+                        return $query->oldest('price');
+                    }
+                })
+                ->when(empty($sort), function ($query, $sort) {
+                    return $query->latest('id');
+                });
+
+            $products = $products->where(function ($query) use ($cat, $subcat, $childcat, $type, $request) {
+                $flag = 0;
+                if (!empty($cat)) {
+                    foreach ($cat->attributes as $key => $attribute) {
+                        $inname = $attribute->input_name;
+                        $chFilters = $request["$inname"];
+
+                        if (!empty($chFilters)) {
+                            $flag = 1;
+                            foreach ($chFilters as $key => $chFilter) {
+                                if ($key == 0) {
+                                    $query->where('attributes', 'like', '%' . '"' . $chFilter . '"' . '%');
+                                } else {
+                                    $query->orWhere('attributes', 'like', '%' . '"' . $chFilter . '"' . '%');
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            if (!empty($subcat)) {
-                foreach ($subcat->attributes as $attribute) {
-                    $inname = $attribute->input_name;
-                    $chFilters = $request["$inname"];
+                if (!empty($subcat)) {
+                    foreach ($subcat->attributes as $attribute) {
+                        $inname = $attribute->input_name;
+                        $chFilters = $request["$inname"];
 
-                    if (!empty($chFilters)) {
-                        $flag = 1;
-                        foreach ($chFilters as $key => $chFilter) {
-                            if ($key == 0 && $flag == 0) {
-                                $query->where('attributes', 'like', '%' . '"' . $chFilter . '"' . '%');
-                            } else {
-                                $query->orWhere('attributes', 'like', '%' . '"' . $chFilter . '"' . '%');
+                        if (!empty($chFilters)) {
+                            $flag = 1;
+                            foreach ($chFilters as $key => $chFilter) {
+                                if ($key == 0 && $flag == 0) {
+                                    $query->where('attributes', 'like', '%' . '"' . $chFilter . '"' . '%');
+                                } else {
+                                    $query->orWhere('attributes', 'like', '%' . '"' . $chFilter . '"' . '%');
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            if (!empty($childcat)) {
-                foreach ($childcat->attributes as $attribute) {
-                    $inname = $attribute->input_name;
-                    $chFilters = $request["$inname"];
+                if (!empty($childcat)) {
+                    foreach ($childcat->attributes as $attribute) {
+                        $inname = $attribute->input_name;
+                        $chFilters = $request["$inname"];
 
-                    if (!empty($chFilters)) {
-                        $flag = 1;
-                        foreach ($chFilters as $key => $chFilter) {
-                            if ($key == 0 && $flag == 0) {
-                                $query->where('attributes', 'like', '%' . '"' . $chFilter . '"' . '%');
-                            } else {
-                                $query->orWhere('attributes', 'like', '%' . '"' . $chFilter . '"' . '%');
+                        if (!empty($chFilters)) {
+                            $flag = 1;
+                            foreach ($chFilters as $key => $chFilter) {
+                                if ($key == 0 && $flag == 0) {
+                                    $query->where('attributes', 'like', '%' . '"' . $chFilter . '"' . '%');
+                                } else {
+                                    $query->orWhere('attributes', 'like', '%' . '"' . $chFilter . '"' . '%');
+                                }
                             }
                         }
                     }
                 }
-            }
-        });
+            });
 
-        $services = $services
-            ->where('language_id', $this->language->id)
-            ->where('status', 1)
-            ->get()
-            ->reject(function ($item) {
-                if ($item->user_id != 0) {
-                    if ($item->user->is_vendor != 2) {
-                        return true;
+            $products = $products
+                ->where('language_id', $this->language->id)
+                ->where('status', 1)
+                ->get()
+                ->reject(function ($item) {
+                    if ($item->user_id != 0) {
+                        if ($item->user->is_vendor != 2) {
+                            return true;
+                        }
                     }
-                }
 
-                if (isset($_GET['max'])) {
-                    if ($item->vendorSizePrice() >= $_GET['max']) {
-                        return true;
+                    if (isset($_GET['max'])) {
+                        if ($item->vendorSizePrice() >= $_GET['max']) {
+                            return true;
+                        }
                     }
-                }
-                return false;
+                    return false;
+                })
+                ->map(function ($item) {
+                    $item->price = $item->vendorSizePrice();
+                    return $item;
+                })
+                ->paginate(isset($pageby) ? $pageby : $this->gs->page_count);
+            $data['products'] = $products;
+            //    dd($data['prods']);
+            $data['countries'] = Country::where('status', 1)
+                ->orderby('id', 'asc')
+                ->get();
+                 //s added by huma
+            $data['categoryType'] = 'product';
+            //e added by huma
+        } else {
+            $data['latest_services'] = UserService::with('user')
+                ->whereStatus(1)
+
+                ->get()
+                ->reject(function ($item) {
+                    if ($item->user_id != 0) {
+                        if ($item->user->is_vendor != 2) {
+                            return true;
+                        }
+                    }
+                    return false;
+                });
+
+            $services = UserService::when($cat, function ($query, $cat) {
+                return $query->where('category_id', $cat->id);
             })
-            ->map(function ($item) {
-                $item->price = $item->vendorSizePrice();
-                return $item;
-            })
-            ->paginate(isset($pageby) ? $pageby : $this->gs->page_count);
-        $data['services'] = $services;
-        //    dd($data['prods']);
-        $data['countries'] = Country::where('status', 1)
-            ->orderby('id', 'asc')
-            ->get();
+                ->when($subcat, function ($query, $subcat) {
+                    return $query->where('subcategory_id', $subcat->id);
+                })
+                ->when($type, function ($query, $type) {
+                    return $query
+                        ->with('user')
+                        ->whereStatus(1)
+                        ->whereIsDiscount(1)
+                        ->where('discount_date', '>=', date('Y-m-d'))
+                        ->whereHas('user', function ($user) {
+                            $user->where('is_vendor', 2);
+                        });
+                })
+                ->when($childcat, function ($query, $childcat) {
+                    return $query->where('childcategory_id', $childcat->id);
+                })
+                ->when($search, function ($query, $search) {
+                    return $query->where('name', 'like', '%' . $search . '%')->orWhere('name', 'like', $search . '%');
+                })
+                ->when($minprice, function ($query, $minprice) {
+                    return $query->where('price', '>=', $minprice);
+                })
+                ->when($maxprice, function ($query, $maxprice) {
+                    return $query->where('price', '<=', $maxprice);
+                })
+                ->when($country, function ($query, $country) {
+                    if (is_array($country)) {
+                        foreach ($country as $key => $coun) {
+                            if ($key == 0) {
+                                $query->where('country_id', '=', $coun);
+                            } else {
+                                $query->orWhere('country_id', '=', $coun);
+                            }
+                        }
+                    }
+                })
+                ->when($city, function ($query, $city) {
+                    if (is_array($city)) {
+                        foreach ($city as $key => $cit) {
+                            if ($key == 0) {
+                                $query->where('city_id', '=', $cit);
+                            } else {
+                                $query->orWhere('city_id', '=', $cit);
+                            }
+                        }
+                    }
+                })
+                ->when($sort, function ($query, $sort) {
+                    if ($sort == 'date_desc') {
+                        return $query->latest('id');
+                    } elseif ($sort == 'date_asc') {
+                        return $query->oldest('id');
+                    } elseif ($sort == 'price_desc') {
+                        return $query->latest('price');
+                    } elseif ($sort == 'price_asc') {
+                        return $query->oldest('price');
+                    }
+                })
+                ->when(empty($sort), function ($query, $sort) {
+                    return $query->latest('id');
+                });
+
+            $services = $services->where(function ($query) use ($cat, $subcat, $childcat, $type, $request) {
+                $flag = 0;
+                if (!empty($cat)) {
+                    foreach ($cat->attributes as $key => $attribute) {
+                        $inname = $attribute->input_name;
+                        $chFilters = $request["$inname"];
+
+                        if (!empty($chFilters)) {
+                            $flag = 1;
+                            foreach ($chFilters as $key => $chFilter) {
+                                if ($key == 0) {
+                                    $query->where('attributes', 'like', '%' . '"' . $chFilter . '"' . '%');
+                                } else {
+                                    $query->orWhere('attributes', 'like', '%' . '"' . $chFilter . '"' . '%');
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (!empty($subcat)) {
+                    foreach ($subcat->attributes as $attribute) {
+                        $inname = $attribute->input_name;
+                        $chFilters = $request["$inname"];
+
+                        if (!empty($chFilters)) {
+                            $flag = 1;
+                            foreach ($chFilters as $key => $chFilter) {
+                                if ($key == 0 && $flag == 0) {
+                                    $query->where('attributes', 'like', '%' . '"' . $chFilter . '"' . '%');
+                                } else {
+                                    $query->orWhere('attributes', 'like', '%' . '"' . $chFilter . '"' . '%');
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (!empty($childcat)) {
+                    foreach ($childcat->attributes as $attribute) {
+                        $inname = $attribute->input_name;
+                        $chFilters = $request["$inname"];
+
+                        if (!empty($chFilters)) {
+                            $flag = 1;
+                            foreach ($chFilters as $key => $chFilter) {
+                                if ($key == 0 && $flag == 0) {
+                                    $query->where('attributes', 'like', '%' . '"' . $chFilter . '"' . '%');
+                                } else {
+                                    $query->orWhere('attributes', 'like', '%' . '"' . $chFilter . '"' . '%');
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            $services = $services
+                ->where('language_id', $this->language->id)
+                ->where('status', 1)
+                ->get()
+                ->reject(function ($item) {
+                    if ($item->user_id != 0) {
+                        if ($item->user->is_vendor != 2) {
+                            return true;
+                        }
+                    }
+
+                    if (isset($_GET['max'])) {
+                        if ($item->vendorSizePrice() >= $_GET['max']) {
+                            return true;
+                        }
+                    }
+                    return false;
+                })
+                ->map(function ($item) {
+                    $item->price = $item->vendorSizePrice();
+                    return $item;
+                })
+                ->paginate(isset($pageby) ? $pageby : $this->gs->page_count);
+            $data['services'] = $services;
+            //    dd($data['prods']);
+            $data['countries'] = Country::where('status', 1)
+                ->orderby('id', 'asc')
+                ->get();
+            //s added by huma
+            $data['categoryType'] = 'service';
+            //e added by huma
+        }
+
         if ($request->ajax()) {
             $data['ajax_check'] = 1;
             return view('frontend.ajax.service_category', $data);
         }
-        //s added by huma
-        $data['categoryType'] = 'service';
-        //e added by huma
 
         return view('frontend.services', $data);
     }
