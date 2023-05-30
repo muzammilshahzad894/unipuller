@@ -16,7 +16,7 @@
                 </p>
             </div>
             <div
-                class="col-lg-4 col-md-4 col-sm-12 col-12 d-flex justify-content-md-end justify-content-sm-center align-items-center">
+                class=" pay-strip col-lg-4 col-md-4 col-sm-12 col-12 d-flex justify-content-md-end justify-content-sm-center align-items-center">
                 <h6 class="mb-0 px-2">Pay with strip</h6>
                 <a href=""><img src="{{ asset('assets/front/images/strip.png') }}" class="rounded-circle"
                         width="70" alt="" srcset=""></a>
@@ -81,6 +81,7 @@
                         class="advertise-number text-white"> 0000-000-000</span></p>
             </div>
         </div>
+        
         <div class="row  py-2">
             <div class="col-lg-12 col-md-12 col-sm-12 col-12 justify-content-md-start justify-content-sm-center">
                 <h6 class="mb-0">Latest Posts</h6>
@@ -89,7 +90,14 @@
             </div>
 
         </div>
-
+        <div class="row pay-strip-mobile">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-12  d-flex  justify-content-md-start justify-content-sm-center align-items-center">
+                <span class="h6">Pay with strip</span>
+                <a href=""><img src="{{ asset('assets/front/images/strip.png') }}" class="rounded-circle"
+                        width="70" alt="" srcset=""></a>
+            </div>
+           
+        </div>
         <div class="row  py-2 d-flex justify-content-between">
             <div class="col-md-7 col-sm-12 copy-rights">
                 <a href="{{ route('front.index') }}"><img class="lazy"

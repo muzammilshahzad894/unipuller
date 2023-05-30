@@ -261,7 +261,7 @@
                                         {{ Session::has('currency')? (Session::get('currency') == $currency->id? 'selected': ''): (DB::table('currencies')->where('is_default', '=', 1)->first()->id == $currency->id? 'selected': '') }}>
                                         {{-- <span class="text-dark">{{ Session::has('currency')? DB::table('currencies')->where('id', '=', Session::get('currency'))->first()->sign: DB::table('currencies')->where('is_default', '=', 1)->first()->sign }}</span> --}}
                                         {{$currency->sign}}
-                                        {{ $currency->name }}
+                                        {{-- {{ $currency->name }} --}}
                                     </option>
                                 @endforeach
                             </select>

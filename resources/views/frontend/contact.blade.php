@@ -14,8 +14,7 @@
                         <div class="col-12">
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb mb-0 d-inline-flex bg-transparent p-0">
-                                    <li class="breadcrumb-item"><a
-                                            href="{{ route('front.index') }}">{{ __('uk') }}</a>
+                                    <li class="breadcrumb-item"><a href="{{ route('front.index') }}">{{ __('uk') }}</a>
                                     </li>
                                     <li class="breadcrumb-item active" aria-current="page">{{ __('Contact') }}</li>
                                 </ol>
@@ -100,9 +99,17 @@
                                         <div class="col-md-12">
                                             <div class="mb-3">
                                                 <label>{{ __('Phone Number') }}:</label>
-                                                <input type="text" class="form-control bg-white" id="phone_no"
-                                                    name="phone_no" placeholder="{{ __('Phone Number *') }}"
-                                                    required="">
+                                                <div class="d-flex">
+                                                    <select class="form-select form-control bg-white rounded-start" id="country_code"
+                                                        name="country_code" aria-label="country_code"
+                                                        onchange="addCountryCode()" required>
+                                                        <option value="+44">UK </option>
+                                                        <option value="+880">Bangladesh </option>
+                                                    </select>
+                                                    <input type="text" class="form-control bg-white rounded-end" id="phone_no"
+                                                        name="phone_no" value="+44" placeholder="{{ __('Phone Number *') }}"
+                                                        required="">
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
@@ -124,8 +131,8 @@
                                         @endif
                                         <input type="hidden" name="to" value="{{ $ps->contact_email }}">
                                         <div class="col-md-12 mt-3">
-                                            <button id="btn_submit" class="btn btn-primary submit-btn mybtn1" name="submit"
-                                                type="submit">{{ __('Send Message') }}</button>
+                                            <button id="btn_submit" class="btn btn-primary submit-btn mybtn1"
+                                                name="submit" type="submit">{{ __('Send Message') }}</button>
                                         </div>
                                     </div>
                                 </form>
@@ -137,13 +144,13 @@
                             <ul class="nav nav-tabs" id="myTab" role="tablist">
                                 <li class="nav-item" role="presentation">
                                     <button class="nav-link active" id="uk-tab" data-bs-toggle="tab"
-                                        data-bs-target="#uk" type="button" role="tab"
-                                        aria-controls="uk" aria-selected="true">United Kingdom</button>
+                                        data-bs-target="#uk" type="button" role="tab" aria-controls="uk"
+                                        aria-selected="true">United Kingdom</button>
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <button class="nav-link" id="bangladesh-tab" data-bs-toggle="tab"
-                                        data-bs-target="#bangladesh" type="button" role="tab" aria-controls="bangladesh"
-                                        aria-selected="false">Bangladesh</button>
+                                        data-bs-target="#bangladesh" type="button" role="tab"
+                                        aria-controls="bangladesh" aria-selected="false">Bangladesh</button>
                                 </li>
                             </ul>
                             <div class="tab-content" id="myTabContent">
@@ -152,22 +159,22 @@
                                     <div class="d-flex p-4">
                                         <ul>
                                             @if ($ps->street != null)
-                                                <li class="mb-3">
+                                                <li class="mb-3 text-dark">
                                                     <strong>{{ __('Office Address') }} :</strong><br> {{ $ps->street }}
                                                 </li>
                                             @endif
                                             @if ($ps->phone != null)
-                                                <li class="mb-3">
+                                                <li class="mb-3 text-dark">
                                                     <strong>Contact Number :</strong><br> {{ $ps->phone }}
                                                 </li>
                                             @endif
                                             @if ($ps->fax != null)
-                                                <li class="mb-3">
+                                                <li class="mb-3 text-dark">
                                                     <strong>Fax :</strong><br> {{ $ps->fax }}
                                                 </li>
                                             @endif
                                             @if ($ps->email != null)
-                                                <li class="mb-3">
+                                                <li class="mb-3 text-dark">
                                                     <strong>{{ __('Email Address') }} :</strong><br>
                                                     <p class="email">{{ $ps->email }}</p>
                                                 </li>
@@ -175,21 +182,22 @@
                                         </ul>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="bangladesh" role="tabpanel" aria-labelledby="bangladesh-tab">
+                                <div class="tab-pane fade" id="bangladesh" role="tabpanel"
+                                    aria-labelledby="bangladesh-tab">
                                     <div class="d-flex p-4">
                                         <ul>
                                             @if ($ps->street_BD != null)
-                                                <li class="mb-3">
+                                                <li class="mb-3 text-dark">
                                                     <strong>{{ __('Office Address') }} :</strong><br> {{ $ps->street_BD }}
                                                 </li>
                                             @endif
                                             @if ($ps->phone_BD != null)
-                                                <li class="mb-3">
+                                                <li class="mb-3 text-dark">
                                                     <strong>Contact Number :</strong><br> {{ $ps->phone_BD }}
                                                 </li>
                                             @endif
                                             @if ($ps->fax_BD != null)
-                                                <li class="mb-3">
+                                                <li class="mb-3 text-dark">
                                                     <strong>Fax :</strong><br> {{ $ps->fax_BD }}
                                                 </li>
                                             @endif
@@ -202,7 +210,7 @@
                                         </ul>
                                     </div>
                                 </div>
-                               
+
                             </div>
 
 
@@ -250,5 +258,11 @@
         //         }
         //     });
         //
+        function addCountryCode() {
+            var countryCode = document.getElementById('country_code');
+            var phone_no = document.getElementById("phone_no");
+            // Update the value of the input field
+            phone_no.value = countryCode.value;
+        }
     </script>
 @endsection
