@@ -507,6 +507,9 @@ background-color: var(--light-green) !important;
   width: 100% !important;
   margin: 20px auto;
 }
+.modal  #search_filter_modal_btn{
+  display:none;
+}
 .pay-strip-mobile{
   display:none !important;
 }

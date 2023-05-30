@@ -22,7 +22,7 @@
 <div class=" d-flex justify-content-center py-3">
    <div class="product-search-one">
       <form id="searchForm" class="search-form form-inline search-pill-shape"
-          action="{{ route('front.category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}"
+          action=""
           method="GET">
    
           @if (!empty(request()->input('sort')))
@@ -34,10 +34,9 @@
           @if (!empty(request()->input('maxprice')))
               <input type="hidden" name="maxprice" value="{{ request()->input('maxprice') }}">
           @endif
-          <input type="text" id="prod_name2" class="col form-control search-field" name="search"
+          <input type="text" id="prod_name" class="col form-control search-field" name="search"
               placeholder="Search Product For" value="{{ request()->input('search') }}">
-   
-          <div class="select-appearance-none categori-container mx-2" id="catSelectForm">
+          {{-- <div class="select-appearance-none categori-container mx-2" id="catSelectForm">
               <select name="category" class="form-control select2 category_select">
                   <option selected disabled>{{ __('Select Category') }}</option>
                   @foreach (DB::table('categories')->where('language_id', $langg->id)->where('status', 1)->get() as $data)
@@ -48,9 +47,9 @@
                   @endforeach
               </select>
           </div>
+    --}}
    
-   
-          <button type="submit" name="submit" class="search-submit"><i
+          <button type="button" onclick="searchByProductName()"><i
                   class="flaticon-search flat-mini text-white"></i></button>
    
       </form>
@@ -82,13 +81,17 @@
      
                  </select>
              </div>
+             <p class="text-right" id="search-text"> </p>
+
          </div>
      </div>
     </div>
     <div class="products-header-right">
         <div class="products-view px-5">
-            <a href="{{ route('front.category') }}"><button class="btn btn-sm">Product</button></a>
-            <a href="{{ route('front.service_category') }}"><button class="btn btn-sm btn-primary">Service</button></a>
+            <button class="btn btn-sm" id="productBtn" onclick="filterProducts()">Product</button>
+            <button class="btn btn-sm btn-primary" id="serviceBtn" onclick="filterServices()">Service</button>
+            <input type="hidden" id="searchProduct" name="searchProduct">
+
         </div>
         {{-- <form class="woocommerce-ordering" method="get">
             <select name="sort" class="orderby short-item" aria-label="Shop order" id="sortby">

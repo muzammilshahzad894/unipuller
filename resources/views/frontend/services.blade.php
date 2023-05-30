@@ -39,7 +39,12 @@
                             </div>
                             @includeIf('frontend.service_category')
                             <div class="showing-products pt-30 pb-50 border-2 border-bottom border-light" id="ajaxContent">
-                                @includeIf('partials.service.service-different-view')
+                                @if ($categoryType== 'product')
+                                {{dd($categoryType)}}
+                                    @includeIf('partials.product.product-different-view')
+                                @else
+                                    @includeIf('partials.service.service-different-view')
+                                @endif
                             </div>
                             @include('frontend.pagination.service')
                         </div>
@@ -65,12 +70,12 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Select Country </h5>
-                    <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    {{-- <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button> --}}
                 </div>
                 <div class="modal-body">
                     <div class="">
                         <select name="country_id[]" class="form-control select2 country" id="country_id_modal"
-                            onchange="countryChangeModal(this)">
+                            onchange="countryChangeModal(this)" required>
                             <option value="" disabled selected>Select Country</option>
                             @foreach ($countries as $country)
                                 <option data-href="{{ route('front-city-load', $country->id) }}"
@@ -88,8 +93,10 @@
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <p class="text-left" id="search-modal-text"> </p>
                     {{-- <button type="button" class="btn btn-secondary close" data-bs-dismiss="modal">Close</button> --}}
-                    <button type="button" class="btn btn-primary">Search</button>
+                    <button type="button" class="btn btn-primary close" id="search_filter_modal_btn"
+                        data-bs-dismiss="modal" aria-label="Close">Close</button>
                 </div>
             </div>
         </div>
@@ -135,9 +142,29 @@
 
         });
 
+        function filterProducts() {
+            document.getElementById('searchProduct').value = 'product';
+            document.getElementById('productBtn').classList.add("btn-primary");
+            document.getElementById('serviceBtn').classList.remove("btn-primary");
+            $(".ajax-loader").show();
+            filter();
+        }
 
+        function filterServices() {
+            document.getElementById('searchProduct').value = 'service';
+            document.getElementById('productBtn').classList.remove("btn-primary");
+            document.getElementById('serviceBtn').classList.add("btn-primary");
+            $(".ajax-loader").show();
+            filter();
+
+        }
+        function searchByProductName(){
+            console.log(' i m hewre in searchByProductName');
+            $(".ajax-loader").show();
+            filter();
+        }
         // when dynamic attribute changes
-        $(".attribute-input, #sortby, #pageby, #country_id,#country_id_modal,#citylist_modal, #citylist").on('change',
+        $(".attribute-input, #sortby, #pageby, #country_id, #country_id_modal, #citylist_modal, #citylist" ).on('change',
             function() {
                 $(".ajax-loader").show();
                 filter();
@@ -148,6 +175,8 @@
             if (link != "") {
                 $(".city-div-modal").css("display", "block");
                 $('#citylist_modal').load(link);
+                $("#search_filter_modal_btn").css("display", "block");
+
                 $('#citylist_modal').prop('disabled', false);
                 $(".select2").select2();
             } else {
@@ -159,6 +188,7 @@
             var link = $(data).find(':selected').attr('data-href');
             if (link != "") {
                 $(".city-div").css("display", "block");
+
                 $('#citylist').load(link);
                 $('#citylist').prop('disabled', false);
                 $(".select2").select2();
@@ -170,6 +200,8 @@
 
         function filter() {
             let filterlink = '';
+            var searchText = 'search-modal-text';
+            console.log('product 2',$("#prod_name").val());
 
             if ($("#prod_name").val() != '') {
                 if (filterlink == '') {
@@ -180,7 +212,16 @@
                     filterlink += '&search=' + $("#prod_name").val();
                 }
             }
-
+            if ($("#prod_name2").val() != '') {
+                if (filterlink == '') {
+                    filterlink +=
+                        '{{ route('front.service_category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}' +
+                        '?search=' + $("#prod_name2").val();
+                } else {
+                    filterlink += '&search=' + $("#prod_name2").val();
+                }
+            }
+            
 
 
             $(".attribute-input").each(function() {
@@ -240,6 +281,7 @@
 
             if ($("#country_id").val() != '') {
                 if (filterlink == '') {
+                    searchText = 'search-text';
                     filterlink +=
                         '{{ route('front.service_category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}' +
                         '?' + $("#country_id").attr('name') + '=' + $("#country_id").val();
@@ -249,6 +291,7 @@
             }
             if ($("#citylist").val() != '') {
                 if (filterlink == '') {
+                    searchText = 'search-text';
                     filterlink +=
                         '{{ route('front.service_category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}' +
                         '?' + $("#citylist").attr('name') + '=' + $("#citylist").val();
@@ -275,15 +318,27 @@
                     filterlink += '&' + $("#citylist_modal").attr('name') + '=' + $("#citylist_modal").val();
                 }
             }
+            if ($("#searchProduct").val() != '') {
+                if (filterlink == '') {
+                    filterlink +=
+                        '{{ route('front.service_category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}' +
+                        '?' + $("#searchProduct").attr('name') + '=' + $("#searchProduct").val();
+                } else {
+                    filterlink += '&' + $("#searchProduct").attr('name') + '=' + $("#searchProduct").val();
+                }
+            }
 
             if (check_view) {
 
                 filterlink += '&view_check=' + check_view;
             }
+            document.getElementById(searchText).innerText = "Searching...";
             $("#ajaxContent").load(encodeURI(filterlink), function(data) {
                 // add query string to pagination
                 addToPagination();
                 $(".ajax-loader").fadeOut(1000);
+                document.getElementById(searchText).innerText = "";
+
             });
         }
 
