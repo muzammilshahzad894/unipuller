@@ -90,7 +90,7 @@
         <div class="products-view px-5">
             <button class="btn btn-sm" id="productBtn" onclick="filterProducts()">Product</button>
             <button class="btn btn-sm btn-primary" id="serviceBtn" onclick="filterServices()">Service</button>
-            <input type="hidden" id="searchProduct" name="searchProduct">
+            <input type="hidden" value="service" id="searchProduct" name="searchProduct">
 
         </div>
         {{-- <form class="woocommerce-ordering" method="get">

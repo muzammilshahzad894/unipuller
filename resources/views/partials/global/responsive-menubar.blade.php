@@ -56,10 +56,12 @@
                                 <a class="nav-link" href="https://slippa.unipuller.uk">{{ __('IT Solutions') }}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="https://ubs.unipuller.com/">{{ __('Business Solutions') }}</a>
+                                <a class="nav-link"
+                                    href="https://ubs.unipuller.com/">{{ __('Business Solutions') }}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="https://slippa.unipuller.uk">{{ __('Digital Marketing') }}</a>
+                                <a class="nav-link"
+                                    href="https://slippa.unipuller.uk">{{ __('Digital Marketing') }}</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="https://slippa.unipuller.uk">{{ __('Domain & Hosting') }}</a>
@@ -124,8 +126,7 @@
                                     <ul class="nav nav-pills wc-tabs" id="menu-and-category" role="tablist">
                                         <li class="nav-item" role="presentation">
                                             <a class="nav-link active" id="pills-push-menu-tab" data-bs-toggle="pill"
-                                                href="#pills-push-menu" role="tab"
-                                                aria-controls="pills-push-menu"
+                                                href="#pills-push-menu" role="tab" aria-controls="pills-push-menu"
                                                 aria-selected="true">{{ __('Menu') }}</a>
                                         </li>
                                         <li class="nav-item" role="presentation">
@@ -137,8 +138,7 @@
                                     </ul>
                                     <div class="tab-content" id="menu-and-categoryContent">
                                         <div class="tab-pane fade show active woocommerce-Tabs-panel woocommerce-Tabs-panel--description"
-                                            id="pills-push-menu" role="tabpanel"
-                                            aria-labelledby="pills-push-menu-tab">
+                                            id="pills-push-menu" role="tabpanel" aria-labelledby="pills-push-menu-tab">
                                             <div class="push-navbar">
                                                 <ul class="navbar-nav">
                                                     <li class="nav-item">
@@ -250,14 +250,14 @@
                                     <option value="{{ route('front.currency', $currency->id) }}"
                                         {{ Session::has('currency')? (Session::get('currency') == $currency->id? 'selected': ''): (DB::table('currencies')->where('is_default', '=', 1)->first()->id == $currency->id? 'selected': '') }}>
                                         {{-- <span class="text-dark">{{ Session::has('currency')? DB::table('currencies')->where('id', '=', Session::get('currency'))->first()->sign: DB::table('currencies')->where('is_default', '=', 1)->first()->sign }}</span> --}}
-                                        {{$currency->sign}}
+                                        {{ $currency->sign }}
                                         {{-- {{ $currency->name }} --}}
                                     </option>
                                 @endforeach
                             </select>
                         </a>
                     </div>
-                     <div class="sign-in position-relative font-general my-account-dropdown ms-2">
+                    <div class="sign-in position-relative font-general my-account-dropdown ms-2">
                         <a href="my-account.html"
                             class="has-dropdown d-flex align-items-center text-dark text-decoration-none"
                             title="My Account">
@@ -333,20 +333,28 @@
             <div class="col-xxl-7 col-xl-6 col-lg-6 col-12 order-lg-2">
                 <div class="product-search-one">
                     <form id="searchForm" class="search-form form-inline search-pill-shape" action=""
-                            method="GET">
+                        method="GET">
 
-                            @if (!empty(request()->input('sort')))
-                                <input type="hidden" name="sort" value="{{ request()->input('sort') }}">
-                            @endif
-                            @if (!empty(request()->input('minprice')))
-                                <input type="hidden" name="minprice" value="{{ request()->input('minprice') }}">
-                            @endif
-                            @if (!empty(request()->input('maxprice')))
-                                <input type="hidden" name="maxprice" value="{{ request()->input('maxprice') }}">
-                            @endif
-                            {{-- <input type="text" id="prod_name" class="col form-control search-field " name="search"
-                            placeholder="Search Product For" value="{{ request()->input('search') }}">
-                        <div class=" categori-container select-appearance-none mx-2" id="serviceSelectForm">
+                        @if (!empty(request()->input('sort')))
+                            <input type="hidden" name="sort" value="{{ request()->input('sort') }}">
+                        @endif
+                        @if (!empty(request()->input('minprice')))
+                            <input type="hidden" name="minprice" value="{{ request()->input('minprice') }}">
+                        @endif
+                        @if (!empty(request()->input('maxprice')))
+                            <input type="hidden" name="maxprice" value="{{ request()->input('maxprice') }}">
+                        @endif
+                        @php
+                            $categoryType = request()->segment(1);
+                        @endphp
+                        @if ($categoryType == 'service_category' || $categoryType == 'category' )
+                            <input type="text" id="prod_name_1" class="col form-control search-field "
+                                name="search" placeholder="Search Product For"
+                                value="{{ request()->input('search') }}">
+                            <div class="autocomplete2">
+                                <div id="myInputautocomplete-list2" class="autocomplete-items"></div>
+                            </div>
+                            {{-- <div class=" categori-container select-appearance-none mx-2" id="serviceSelectForm">
                             <select name="category" class="form-control select2 category_select">
                                 <option selected disabled>{{ __('Select Category') }}</option>
                                 @foreach (DB::table('categories')->where('language_id', $langg->id)->where('status', 1)->get() as $data)
@@ -357,6 +365,7 @@
                                 @endforeach
                             </select>
                         </div> --}}
+                        @else
                             <div class="select-appearance-none categori-container mx-2" id="typeSelectFormSticky">
                                 <select name="selectType" id="selectTypeSticky" class="form-control  type_select"
                                     onchange="searchCategorySticky()" required>
@@ -368,13 +377,19 @@
                             <div class="select-appearance-none categori-container mx-2" id="catSelectFormSticky">
                                 <span id="productCategorySticky">
                                     @php
-                                    $collection1 =DB::table('categories')->where('language_id', $langg->id)->where('status', 1)->get();
-                                    $collection2 =DB::table('service_categories')->where('language_id', $langg->id)->where('status', 1)->get();
-                                    $cats = $collection1->concat($collection2);
-                                @endphp
+                                        $collection1 = DB::table('categories')
+                                            ->where('language_id', $langg->id)
+                                            ->where('status', 1)
+                                            ->get();
+                                        $collection2 = DB::table('service_categories')
+                                            ->where('language_id', $langg->id)
+                                            ->where('status', 1)
+                                            ->get();
+                                        $cats = $collection1->concat($collection2);
+                                    @endphp
                                     <select name="category" class="form-control select2 category_select ">
                                         <option selected disabled>{{ __('Select Category') }}</option>
-                                        @foreach ( $cats as $data)
+                                        @foreach ($cats as $data)
                                             <option value="{{ $data->slug }}"
                                                 {{ Request::route('category') == $data->slug ? 'selected' : '' }}>
                                                 {{ $data->name }}
@@ -395,19 +410,22 @@
                                 </span>
 
                             </div>
-                            <input type="text" id="prod_name2" class="col form-control search-field" name="search"
-                                placeholder="Search Product For" value="{{ request()->input('search') }}">
-                                <input type="hidden" name="searchProduct" value="product">
+                            <input type="text" id="prod_name2" class="col form-control search-field"
+                                name="search" placeholder="Search Product For"
+                                value="{{ request()->input('search') }}">
+                            <input type="hidden" name="searchProduct" value="product">
+                            <div class="autocomplete2">
+                                <div id="myInputautocomplete-list2" class="autocomplete-items"></div>
+                            </div>
+                        @endif
 
 
-                            <button type="submit" name="submit" class="search-submit"><i
-                                    class="flaticon-search flat-mini text-white"></i></button>
+                        <button type="submit" name="submit" class="search-submit"><i
+                                class="flaticon-search flat-mini text-white"></i></button>
 
-                        </form>
+                    </form>
                 </div>
-                <div class="autocomplete2">
-                    <div id="myInputautocomplete-list2" class="autocomplete-items"></div>
-                </div>
+
             </div>
         </div>
     </div>
@@ -436,4 +454,3 @@
         }
     }
 </script>
-

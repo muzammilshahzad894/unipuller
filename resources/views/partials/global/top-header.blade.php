@@ -66,7 +66,7 @@
                 @php
                     $categoryType = request()->segment(1);
                 @endphp
-                @if ($categoryType != 'service_category')
+                @if ($categoryType != 'service_category' && $categoryType != 'category'  )
                     <div class="product-search-one flex-grow-1 global-search">
                         <form id="searchForm" class="search-form form-inline search-pill-shape" action=""
                             method="GET">
@@ -135,6 +135,9 @@
                                     class="flaticon-search flat-mini text-white"></i></button>
 
                         </form>
+                    </div>
+                    <div class="autocomplete">
+                        <div id="myInputautocomplete-list" class="autocomplete-items"></div>
                     </div>
                 @endif
 
@@ -248,9 +251,7 @@
 
                         </form>
                     </div>
-                    <div class="autocomplete">
-                        <div id="myInputautocomplete-list" class="autocomplete-items"></div>
-                    </div>
+                  
 
                     <div class="sign-in my-account-dropdown position-relative">
                         <a href="my-account.html"

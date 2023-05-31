@@ -39,8 +39,8 @@
                             </div>
                             @includeIf('frontend.service_category')
                             <div class="showing-products pt-30 pb-50 border-2 border-bottom border-light" id="ajaxContent">
-                                @if ($categoryType== 'product')
-                                {{dd($categoryType)}}
+                                @if ($categoryType == 'product')
+                                    {{ dd($categoryType) }}
                                     @includeIf('partials.product.product-different-view')
                                 @else
                                     @includeIf('partials.service.service-different-view')
@@ -158,13 +158,16 @@
             filter();
 
         }
-        function searchByProductName(){
-            console.log(' i m hewre in searchByProductName');
+
+        function searchByProductName() {
+            document.getElementById('searchProduct').value = 'product';
+            document.getElementById('productBtn').classList.add("btn-primary");
+            document.getElementById('serviceBtn').classList.remove("btn-primary");
             $(".ajax-loader").show();
             filter();
         }
         // when dynamic attribute changes
-        $(".attribute-input, #sortby, #pageby, #country_id, #country_id_modal, #citylist_modal, #citylist" ).on('change',
+        $(".attribute-input, #sortby, #pageby, #country_id, #country_id_modal, #citylist_modal, #citylist").on('change',
             function() {
                 $(".ajax-loader").show();
                 filter();
@@ -197,12 +200,36 @@
             }
         }
 
+        function getCountry() {
+            let countryArray
+            var countryId = $('#country_id').val()
+            var countryModal = $('#country_id_modal').val()
+            if (countryId != null) {
+                countryArray = countryId
+            } else {
+                countryArray = countryModal
+            }
+            return countryArray
+        }
+        function getCities() {
+            let cityArray
+            var cityList = $('#citylist').val()
+            var cityListModal = $('#citylist_modal').val()
+            if (cityList != '') {
+                cityArray= cityList
+            } else {
+                cityArray= cityListModal
+            }
+            return cityArray
+        }
+        
+
 
         function filter() {
             let filterlink = '';
             var searchText = 'search-modal-text';
-            console.log('product 2',$("#prod_name").val());
-
+            console.log('product', document.getElementById('prod_name').value);
+            console.log('prod_name_1', document.getElementById('prod_name_1').value);
             if ($("#prod_name").val() != '') {
                 if (filterlink == '') {
                     filterlink +=
@@ -212,17 +239,6 @@
                     filterlink += '&search=' + $("#prod_name").val();
                 }
             }
-            if ($("#prod_name2").val() != '') {
-                if (filterlink == '') {
-                    filterlink +=
-                        '{{ route('front.service_category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}' +
-                        '?search=' + $("#prod_name2").val();
-                } else {
-                    filterlink += '&search=' + $("#prod_name2").val();
-                }
-            }
-            
-
 
             $(".attribute-input").each(function() {
                 if ($(this).is(':checked')) {
@@ -279,43 +295,27 @@
                 }
             }
 
-            if ($("#country_id").val() != '') {
+            var countryArray = getCountry();
+            if (countryArray.length>0) {
                 if (filterlink == '') {
                     searchText = 'search-text';
                     filterlink +=
                         '{{ route('front.service_category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}' +
-                        '?' + $("#country_id").attr('name') + '=' + $("#country_id").val();
+                        '?' + 'country_id[]' + '=' + countryArray;
                 } else {
-                    filterlink += '&' + $("#country_id").attr('name') + '=' + $("#country_id").val();
+                    filterlink += '&' + 'country_id[]' + '=' + countryArray;
                 }
             }
-            if ($("#citylist").val() != '') {
+            var cityArray = getCities()
+            console.log('cityArray',cityArray);
+            if (cityArray.length>0) {
                 if (filterlink == '') {
                     searchText = 'search-text';
                     filterlink +=
                         '{{ route('front.service_category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}' +
-                        '?' + $("#citylist").attr('name') + '=' + $("#citylist").val();
+                        '?' + 'city_id[]' + '=' + cityArray;
                 } else {
-                    filterlink += '&' + $("#citylist").attr('name') + '=' + $("#citylist").val();
-                }
-            }
-            // modal added by huma
-            if ($("#country_id_modal").val() != '') {
-                if (filterlink == '') {
-                    filterlink +=
-                        '{{ route('front.service_category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}' +
-                        '?' + $("#country_id_modal").attr('name') + '=' + $("#country_id_modal").val();
-                } else {
-                    filterlink += '&' + $("#country_id_modal").attr('name') + '=' + $("#country_id_modal").val();
-                }
-            }
-            if ($("#citylist_modal").val() != '') {
-                if (filterlink == '') {
-                    filterlink +=
-                        '{{ route('front.service_category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}' +
-                        '?' + $("#citylist_modal").attr('name') + '=' + $("#citylist_modal").val();
-                } else {
-                    filterlink += '&' + $("#citylist_modal").attr('name') + '=' + $("#citylist_modal").val();
+                    filterlink += '&' + 'city_id[]' + '=' + cityArray;
                 }
             }
             if ($("#searchProduct").val() != '') {
@@ -333,12 +333,15 @@
                 filterlink += '&view_check=' + check_view;
             }
             document.getElementById(searchText).innerText = "Searching...";
+            console.log('filterlink',filterlink);
+
             $("#ajaxContent").load(encodeURI(filterlink), function(data) {
                 // add query string to pagination
                 addToPagination();
                 $(".ajax-loader").fadeOut(1000);
                 document.getElementById(searchText).innerText = "";
 
+                $("#prod_name").val("")
             });
         }
 

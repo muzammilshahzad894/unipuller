@@ -1,63 +1,66 @@
 @extends('layouts.front')
 @section('content')
-    @includeIf('partials.global.common-header')
-    <!-- breadcrumb -->
-    <!-- <div class="full-row bg-light overlay-dark py-5" style="background-image: url({{ $gs->breadcrumb_banner ? asset('assets/images/' . $gs->breadcrumb_banner) : asset('assets/front/images/product.jpg') }}); background-position: center center; background-size: cover;"> -->
-    <div class="full-row bg-light overlay-dark py-5"
-        style="background-image: url({{ asset('assets/front/images/product.jpg') }}); background-position: center center; background-size: cover;">
-        <div class="container">
-            <div class="row text-center text-white">
-                <div class="col-12">
-                    <h3 class="mb-2 text-white">{{ __('Product') }}</h3>
-                </div>
-                <div class="col-12">
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb mb-0 d-inline-flex bg-transparent p-0">
-                            <li class="breadcrumb-item"><a href="{{ route('front.index') }}">{{ __('Home') }}</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">{{ __('Product') }}</li>
-                        </ol>
-                    </nav>
+    <div class="products-page">
+        @includeIf('partials.global.common-header')
+        <!-- breadcrumb -->
+        <!-- <div class="full-row bg-light overlay-dark py-5" style="background-image: url({{ $gs->breadcrumb_banner ? asset('assets/images/' . $gs->breadcrumb_banner) : asset('assets/front/images/product.jpg') }}); background-position: center center; background-size: cover;"> -->
+        <div class="full-row bg-light overlay-dark py-5"
+            style="background-image: url({{ asset('assets/front/images/product.jpg') }}); background-position: center center; background-size: cover;">
+            <div class="container">
+                <div class="row text-center text-white">
+                    <div class="col-12">
+                        <h3 class="mb-2 text-white">{{ __('Product') }}</h3>
+                    </div>
+                    <div class="col-12">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb mb-0 d-inline-flex bg-transparent p-0">
+                                <li class="breadcrumb-item"><a href="{{ route('front.index') }}">{{ __('Home') }}</a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">{{ __('Product') }}</li>
+                            </ol>
+                        </nav>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- breadcrumb -->
-    {{-- There are two product page. you have to give condition here --}}
-    <div class="full-row">
-        <div class="container">
-            <div class="row">
-                @includeIf('partials.catalog.catalog')
-                @if (count($prods) > 0)
-                    <div class="col-xl-9">
-                        <div class="mb-4 d-xl-none">
-                            <button class="dashboard-sidebar-btn btn bg-primary rounded">
-                                <i class="fas fa-bars"></i>
-                            </button>
+        <!-- breadcrumb -->
+        {{-- There are two product page. you have to give condition here --}}
+        <div class="full-row">
+            <div class="container">
+                <div class="row">
+                    @includeIf('partials.catalog.catalog')
+                    @if (count($prods) > 0)
+                        <div class="col-xl-9">
+                            <div class="mb-4 d-xl-none">
+                                <button class="dashboard-sidebar-btn btn bg-primary rounded">
+                                    <i class="fas fa-bars"></i>
+                                </button>
+                            </div>
+                            @includeIf('frontend.category')
+                            <div class="showing-products pt-30 pb-50 border-2 border-bottom border-light" id="ajaxContent">
+                                @includeIf('partials.product.product-different-view')
+                            </div>
+                            @include('frontend.pagination.product')
                         </div>
-                        @includeIf('frontend.category')
-                        <div class="showing-products pt-30 pb-50 border-2 border-bottom border-light" id="ajaxContent">
-                            @includeIf('partials.product.product-different-view')
-                        </div>
-                        @include('frontend.pagination.product')
-                    </div>
-                @else
-                    <div class="col-lg-9">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="page-center">
-                                    <h4 class="text-center">{{ __('No Product Found.') }}</h4>
+                    @else
+                        <div class="col-lg-9">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="page-center">
+                                        <h4 class="text-center">{{ __('No Product Found.') }}</h4>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                @endif
+                    @endif
+                </div>
             </div>
         </div>
-    </div>
 
-    {{-- @includeIf('partials.product.grid') --}}
-    {{-- @includeIf('partials.global.common-footer') --}}
+        {{-- @includeIf('partials.product.grid') --}}
+        {{-- @includeIf('partials.global.common-footer') --}}
+    </div>
 @endsection
 @section('script')
     <script>
@@ -90,7 +93,10 @@
             }
         }
 
-
+        function searchByProductName() {
+            $(".ajax-loader").show();
+            filter();
+        }
         function filter() {
             let filterlink = '';
 

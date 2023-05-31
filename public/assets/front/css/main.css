@@ -496,10 +496,13 @@ background-color: var(--light-green) !important;
   display: none;
 }
 
-.services-page span.select2.select2-container.select2-container--default {
+.services-page span.select2.select2-container.select2-container--default,
+.products-page span.select2.select2-container.select2-container--default {
   min-width: 200px !important;
 }
-.services-page  .d-flex.justify-content-center .product-search-one{
+.services-page  .d-flex.justify-content-center .product-search-one,
+.products-page  .d-flex.justify-content-center .product-search-one
+{
     width: 80%;
 }
 
