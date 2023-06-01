@@ -539,6 +539,11 @@ background-color: var(--light-green) !important;
     height: 202px;
   }
 }
+@media (max-width: 1199px) {
+  /* div#sidebar {
+    display:none;
+  } */
+}
 @media (max-width: 1024px) {
   .footer-section img {
     width: 60px;

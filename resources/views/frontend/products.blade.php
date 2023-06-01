@@ -31,8 +31,8 @@
                 <div class="row">
                     @includeIf('partials.catalog.catalog')
                     @if (count($prods) > 0)
-                        <div class="col-xl-9">
-                            <div class="mb-4 d-xl-none">
+                        <div class="col-xl-9 col-lg-9">
+                            <div class="mb-4 d-xl-none d-lg-none">
                                 <button class="dashboard-sidebar-btn btn bg-primary rounded">
                                     <i class="fas fa-bars"></i>
                                 </button>
@@ -45,7 +45,7 @@
                         </div>
                     @else
                         <div class="col-lg-9">
-                            <div class="mb-4 d-xl-none">
+                            <div class="mb-4 d-xl-none d-lg-none">
                                 <button class="dashboard-sidebar-btn btn bg-primary rounded">
                                     <i class="fas fa-bars"></i>
                                 </button>

@@ -30,8 +30,8 @@
             <div class="container">
                 <div class="row">
                     @includeIf('partials.catalog.service-catalog')
-                    <div class="col-xl-9">
-                        <div class="mb-4 d-xl-none">
+                    <div class="col-xl-9 col-lg-9">
+                        <div class="mb-4 d-xl-none d-lg-none">
                             <button class="dashboard-sidebar-btn btn bg-primary rounded">
                                 <i class="fas fa-bars"></i>
                             </button>

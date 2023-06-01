@@ -1,6 +1,6 @@
-<div class="col-xl-3">
+<div class="col-xl-3 col-lg-3">
     <div id="sidebar" class="widget-title-bordered-full">
-        <div class="dashbaord-sidebar-close d-xl-none">
+        <div class="dashbaord-sidebar-close d-xl-none d-lg-none">
     <i class="fas fa-times"></i>
   </div>
         <form id="catalogForm" action="{{ route('front.service_category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}" method="GET">
