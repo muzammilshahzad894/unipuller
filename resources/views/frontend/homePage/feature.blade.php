@@ -53,7 +53,7 @@
                                 $currentimg = asset('assets/front/images/products/sample'.$index.'.png');
                             @endphp
                                 <div class="col-6">
-                                    <a href="{{ route('front.categories') }}" class="text-decoration-none">
+                                    <a href="{{ route('front.category') }}" class="text-decoration-none">
                                         <div class="card-item text-center">
                                             <img class="lazy"
                                                 data-src="{{$currentimg }}"

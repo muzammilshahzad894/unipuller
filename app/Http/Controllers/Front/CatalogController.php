@@ -15,7 +15,7 @@ class CatalogController extends FrontBaseController
 
     public function categories()
     {
-        return view('frontend.products', compact('prods'));
+        return view('frontend.products');
     }
 
     // -------------------------------- CATEGORY SECTION ----------------------------------------
@@ -179,32 +179,32 @@ class CatalogController extends FrontBaseController
             ->where('status', 1)
             ->where('category_type', 1)
             ->when($country, function ($query, $country) {
-                    if (is_array($country)) {
-                        $query->where(function ($q) use ($country) {
-                            foreach ($country as $cty) {
-                                if ($cty !== 'all') {
-                                    $q->orWhereJsonContains('country_id', $cty);
-                                }
+                if (is_array($country)) {
+                    $query->where(function ($q) use ($country) {
+                        foreach ($country as $cty) {
+                            if ($cty !== 'all') {
+                                $q->orWhereJsonContains('country_id', $cty);
                             }
-                        });
-                    }
-                })
-                ->when($city, function ($query, $city) {
-                    if (is_array($city)) {
-                        $query->where(function ($q) use ($city) {
-                            foreach ($city as $cit) {
-                                if ($cit !== 'all') {
-                                    $q->orWhereJsonContains('city_id', $cit);
-                                }
-                            }
-                        });
-                    }
-                })
-                ->when($search, function ($query, $search) {
-                    return $query->where(function ($q) use ($search) {
-                        $q->where('name', 'like', '%' . $search . '%')->orWhere('name', 'like', $search . '%');
+                        }
                     });
-                })
+                }
+            })
+            ->when($city, function ($query, $city) {
+                if (is_array($city)) {
+                    $query->where(function ($q) use ($city) {
+                        foreach ($city as $cit) {
+                            if ($cit !== 'all') {
+                                $q->orWhereJsonContains('city_id', $cit);
+                            }
+                        }
+                    });
+                }
+            })
+            ->when($search, function ($query, $search) {
+                return $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', '%' . $search . '%')->orWhere('name', 'like', $search . '%');
+                });
+            })
             ->get()
             ->reject(function ($item) {
                 if ($item->user_id != 0) {
@@ -267,7 +267,6 @@ class CatalogController extends FrontBaseController
                 ->firstOrFail();
             $data['cat'] = $cat;
         }
-
         if (!empty($slug1)) {
             $subcat = Subcategory::where('slug', $slug1)->firstOrFail();
             $data['subcat'] = $subcat;
@@ -280,7 +279,6 @@ class CatalogController extends FrontBaseController
             $childcat = Childcategory::where('slug', $slug2)->firstOrFail();
             $data['childcat'] = $childcat;
         }
-
         if ($request->searchProduct == 'product') {
             $data['latest_products'] = Product::with('user')
                 ->whereStatus(1)
@@ -295,14 +293,7 @@ class CatalogController extends FrontBaseController
                     }
                     return false;
                 });
-
-            $prods = Product::when($cat, function ($query, $cat) {
-                return $query->where('category_id', $cat->id);
-            })
-                ->when($subcat, function ($query, $subcat) {
-                    return $query->where('subcategory_id', $subcat->id);
-                })
-                ->when($type, function ($query, $type) {
+            $prods = Product::when($type, function ($query, $type) {
                     return $query
                         ->with('user')
                         ->whereStatus(1)
@@ -311,9 +302,6 @@ class CatalogController extends FrontBaseController
                         ->whereHas('user', function ($user) {
                             $user->where('is_vendor', 2);
                         });
-                })
-                ->when($childcat, function ($query, $childcat) {
-                    return $query->where('childcategory_id', $childcat->id);
                 })
                 ->when($minprice, function ($query, $minprice) {
                     return $query->where('price', '>=', $minprice);
@@ -340,18 +328,14 @@ class CatalogController extends FrontBaseController
                 ->where('language_id', $this->language->id)
                 ->where('status', 1)
                 ->where('category_type', 2)
-                ->where(function ($query) use ($cat, $subcat, $childcat, $request) {
-                    if (!empty($cat)) {
-                        $query->whereJsonContains('attributes->category', $cat->id);
-                    }
-
-                    if (!empty($subcat)) {
-                        $query->whereJsonContains('attributes->subcategory', $subcat->id);
-                    }
-
-                    if (!empty($childcat)) {
-                        $query->whereJsonContains('attributes->childcategory', $childcat->id);
-                    }
+                ->when($cat, function ($query, $cat) {
+                    return $query->where('category_id', $cat->id);
+                })
+                ->when($subcat, function ($query, $subcat) {
+                    return $query->where('subcategory_id', $subcat->id);
+                })
+                ->when($childcat, function ($query, $childcat) {
+                    return $query->where('childcategory_id', $childcat->id);
                 })
                 ->when($country, function ($query, $country) {
                     if (is_array($country)) {
@@ -401,7 +385,6 @@ class CatalogController extends FrontBaseController
                     return $item;
                 })
                 ->paginate(isset($pageby) ? $pageby : $this->gs->page_count);
-
             $data['prods'] = $prods;
             $data['countries'] = Country::where('status', 1)
                 ->orderby('id', 'asc')

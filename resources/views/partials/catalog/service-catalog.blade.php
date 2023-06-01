@@ -8,12 +8,11 @@
         <div id="woocommerce_product_categories-4" class="widget woocommerce widget_product_categories widget-toggle">
             <h2 class="widget-title">{{ __('Service categories') }}</h2>
             <ul class="product-categories">
-                @foreach (App\Models\Category::where('language_id',$langg->id)->where('status',1)->get() as $category)
-
+                @foreach (App\Models\ServiceCategory::where('language_id',$langg->id)->where('status',1)->get() as $category)
                 <li class="cat-item cat-parent">
                     <a href="{{route('front.service_category', $category->slug)}}{{!empty(request()->input('search')) ? '?search='.request()->input('search') : ''}}" class="category-link" id="cat">{{ $category->name }} <span class="count"></span></a>
 
-                    @if($category->servicesubs->count() > 0)
+                    {{-- @if($category->servicesubs->count() > 0)
                         <span class="has-child"></span>
                         <ul class="children">
                             @foreach (App\Models\Subcategory::where('category_id',$category->id)->where('type',2)->get() as $subcategory)
@@ -35,7 +34,7 @@
                             </li>
                             @endforeach
                         </ul>
-                    @endif
+                    @endif --}}
                 </li>
                 @endforeach
             </ul>

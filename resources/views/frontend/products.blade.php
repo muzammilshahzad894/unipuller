@@ -45,6 +45,12 @@
                         </div>
                     @else
                         <div class="col-lg-9">
+                            <div class="mb-4 d-xl-none">
+                                <button class="dashboard-sidebar-btn btn bg-primary rounded">
+                                    <i class="fas fa-bars"></i>
+                                </button>
+                            </div>
+                            @includeIf('frontend.category')
                             <div class="card">
                                 <div class="card-body">
                                     <div class="page-center">

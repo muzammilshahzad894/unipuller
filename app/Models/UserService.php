@@ -20,7 +20,7 @@ class UserService extends Model
     }
     public function categories()
     {
-        return $this->belongsTo('App\Models\Category', 'category_id', 'id');
+        return $this->belongsTo('App\Models\ServiceCategory', 'category_id', 'id');
     }
     public function ratings()
     {
