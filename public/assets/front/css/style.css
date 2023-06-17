@@ -1803,7 +1803,7 @@ select.category_select {
 }
 [class*="product-search-"] .select-appearance-none {
     position: relative;
-    min-width: 140px;
+    min-width: 50px;
 }
 [class*="product-search-"] .select-appearance-none::before {
     position: absolute;
@@ -9734,7 +9734,8 @@ select.form-control {
     border: 1px solid var(--theme-dark-color) !important;
 }
 [class*="product-search-"] .form-inline button {
-    background: var(--theme-secondary-color) !important;
+    /* background: var(--theme-secondary-color) !important; */
+    background: #424a4d  !important;
 }
 
 .dashboard-sidebar-btn {

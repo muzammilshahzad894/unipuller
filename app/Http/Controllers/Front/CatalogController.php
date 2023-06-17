@@ -34,7 +34,7 @@ class CatalogController extends FrontBaseController
         $flash = null;
         $minprice = $request->min;
         $maxprice = $request->max;
-        $sort = $request->sort;
+        $sort = $request->sortby;
         $search = $request->search;
         $pageby = $request->pageby;
         $minprice = $minprice / $this->curr->value;
@@ -249,7 +249,7 @@ class CatalogController extends FrontBaseController
         $flash = null;
         $minprice = $request->min;
         $maxprice = $request->max;
-        $sort = $request->sort;
+        $sort = $request->sortby;
         $search = $request->search;
         $pageby = $request->pageby;
         $minprice = $minprice / $this->curr->value;

@@ -82,7 +82,7 @@
 
     </div>
 </div>
-<div class="header-sticky bg-light py-10">
+<div class="header-sticky  py-10">
     <div class="container">
         <div class="row align-items-center d-flex justify-content-between">
             <div class="col-xxl-2 col-xl-2 col-lg-2 col-6 order-lg-1">
@@ -349,7 +349,7 @@
                         @endphp
                         @if ($categoryType == 'service_category' || $categoryType == 'category' )
                             <input type="text" id="prod_name_1" class="col form-control search-field "
-                                name="search" placeholder="Search Product For"
+                                name="search" placeholder="Search For"
                                 value="{{ request()->input('search') }}">
                             <div class="autocomplete2">
                                 <div id="myInputautocomplete-list2" class="autocomplete-items"></div>
@@ -366,15 +366,15 @@
                             </select>
                         </div> --}}
                         @else
-                            <div class="select-appearance-none categori-container mx-2" id="typeSelectFormSticky">
+                            <div class="select-appearance-none categori-container mx-2 " id="typeSelectFormSticky">
                                 <select name="selectType" id="selectTypeSticky" class="form-control  type_select"
                                     onchange="searchCategorySticky()" required>
-                                    <option value=""> Select Type </option>
+                                    <option value="">  Type </option>
                                     <option value="2"> Service </option>
                                     <option value="1"> Product </option>
                                 </select>
                             </div>
-                            <div class="select-appearance-none categori-container mx-2" id="catSelectFormSticky">
+                            <div class="select-appearance-none categori-container" id="catSelectFormSticky">
                                 <span id="productCategorySticky">
                                     @php
                                         $collection1 = DB::table('categories')
@@ -411,7 +411,7 @@
 
                             </div>
                             <input type="text" id="prod_name2" class="col form-control search-field"
-                                name="search" placeholder="Search Product For"
+                                name="search" placeholder="Search For"
                                 value="{{ request()->input('search') }}">
                             <input type="hidden" name="searchProduct" value="product">
                             <div class="autocomplete2">

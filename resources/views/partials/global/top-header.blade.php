@@ -96,15 +96,15 @@
                             <div class="select-appearance-none categori-container mx-2" id="typeSelectForm">
                                 <select name="selectType" id="selectType" class="form-control  type_select"
                                     onchange="searchCategory()" required>
-                                    <option value=""> Select Type </option>
+                                    <option value=""> Type </option>
                                     <option value="2"> Service </option>
                                     <option value="1"> Product </option>
                                 </select>
                             </div>
-                            <div class="select-appearance-none categori-container mx-2" id="catSelectForm">
+                            <div class="select-appearance-none categori-container " id="catSelectForm">
                                 <span id="productCategory">
                                     <select name="category" class="form-control select2 category_select ">
-                                        <option selected disabled>{{ __('Select Category im here') }}</option>
+                                        <option selected disabled>{{ __('Select Category ') }}</option>
                                         @foreach (DB::table('categories')->where('language_id', $langg->id)->where('status', 1)->get() as $data)
                                             <option value="{{ $data->slug }}"
                                                 {{ Request::route('category') == $data->slug ? 'selected' : '' }}>
@@ -127,7 +127,7 @@
 
                             </div>
                             <input type="text" id="prod_name2" class="col form-control search-field" name="search"
-                                placeholder="Search Product For" value="{{ request()->input('search') }}">
+                                placeholder="Search For" value="{{ request()->input('search') }}">
                                 <input type="hidden" name="searchProduct" value="product">
 
 
@@ -213,12 +213,12 @@
                             </div> --}}
                             <div class="select-appearance-none categori-container mx-2 border-end" id="typeSelectForm">
                                 <select name="type" class="form-control  type_select" required>
-                                    <option value=""> Select Type </option>
+                                    <option value=""> Type </option>
                                     <option value="service"> Service </option>
                                     <option value="product"> Product </option>
                                 </select>
                             </div>
-                            <div class="select-appearance-none categori-container mx-2" id="catSelectForm">
+                            <div class="select-appearance-none categori-container " id="catSelectForm">
                                 <span id="productCategory">
                                     <select name="category" class="form-control select2 category_select ">
                                         <option selected disabled>{{ __('Select Category') }}</option>
@@ -243,7 +243,7 @@
                                 </span>
                             </div>
                             <input type="text" id="prod_name2" class="col form-control search-field" name="search"
-                                placeholder="Search Product For" value="{{ request()->input('search') }}">
+                                placeholder="Search For" value="{{ request()->input('search') }}">
 
 
                             <button type="submit" name="submit" class="search-submit"><i

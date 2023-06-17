@@ -105,7 +105,7 @@
 
     <div id="extraData">
         <div class="text-center">
-            <img src="{{ asset('assets/images/' . $gs->loader) }}">
+            {{-- <img src="{{ asset('assets/images/' . $gs->loader) }}"> --}}
         </div>
     </div>
 
@@ -144,7 +144,8 @@
 @section('script')
     <script>
         let checkTrur = 0;
-        $(window).on('scroll', function() {
+        // $(window).on('scroll', function() {
+        $(window).on('load', function() {
 
             if (checkTrur == 0) {
                 $('#extraData').load('{{ route('front.extraIndex') }}');

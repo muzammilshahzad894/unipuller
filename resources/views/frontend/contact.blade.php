@@ -156,7 +156,7 @@
                             <div class="tab-content" id="myTabContent">
                                 <div class="tab-pane fade show active" id="uk" role="tabpanel"
                                     aria-labelledby="uk-tab">
-                                    <div class="d-flex p-4">
+                                    <div class="d-flex p-4 bg-white">
                                         <ul>
                                             @if ($ps->street != null)
                                                 <li class="mb-3 text-dark">

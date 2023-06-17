@@ -63,13 +63,84 @@
                 </div>
             </div>
         </div>
+  <!-- Modal -->
+  <div id="overlay"></div>
+  <div class="modal" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Select Country </h5>
+                  {{-- <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button> --}}
+              </div>
+              <div class="modal-body">
+                  <div class="">
+                      <select name="country_id[]" class="form-control select2 country" id="country_id_modal"
+                          onchange="countryChangeModal(this)" required>
+                          <option value="" disabled selected>Select Country</option>
+                          @foreach ($countries as $country)
+                              <option data-href="{{ route('front-city-load', $country->id) }}"
+                                  value="{{ $country->id }}">
+                                  {{ $country->country_name }}</option>
+                          @endforeach
+                      </select>
+                  </div>
 
+                  <div class="city-div-modal" style="display:none">
+                      <select name="city_id[]" id="citylist_modal" class="select2" multiple>
+                          <option value="all">All City</option>
+
+                      </select>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                  <p class="text-left" id="search-modal-text"> </p>
+                  {{-- <button type="button" class="btn btn-secondary close" data-bs-dismiss="modal">Close</button> --}}
+                  <button type="button" class="btn btn-primary close" id="search_filter_modal_btn"
+                      data-bs-dismiss="modal" aria-label="Close">Close</button>
+              </div>
+          </div>
+      </div>
+  </div>
         {{-- @includeIf('partials.product.grid') --}}
         {{-- @includeIf('partials.global.common-footer') --}}
     </div>
 @endsection
 @section('script')
     <script>
+         //s added by huma 
+         var flag = 0;
+            $(document).ready(function() {
+                // Show the modal
+                var countryIdLocalStore = localStorage.getItem("countryIdLocalStore");
+                var cityIdLocalStore = localStorage.getItem("cityIdLocalStore");
+                if (countryIdLocalStore == null) {
+                    $("#overlay").show();
+                    $("#myModal").show();
+
+                    // Close the modal when the close button is clicked
+                    $(".close").click(function() {
+                        $("#myModal").hide();
+                        $("#overlay").hide();
+
+                    });
+                } else {
+                    $('#country_id').val(countryIdLocalStore).trigger('change');
+
+                }
+            });
+
+            function searchCategory() {
+                var type = document.getElementById("selectType").value;
+                // Change the action attribute (form path)
+                if (type == 'service') {
+                    document.getElementById("cites").style.display = "block"
+                }
+            }
+            //e added by huma 
+
+
+
+
         let check_view = '';
         $(document).on('click', '.check_view', function() {
             check_view = $(this).attr('data-shopview');
@@ -81,128 +152,321 @@
         });
 
 
-        // when dynamic attribute changes
-        $(".attribute-input, #sortby, #pageby, #country_id, #citylist").on('change', function() {
-            $(".ajax-loader").show();
-            filter();
-        });
+        $(".attribute-input, #sortby, #pageby, #country_id, #country_id_modal, #citylist_modal, #citylist").on('change',
+                function() {
+                    $(".ajax-loader").show();
+                    filter();
+                });
 
-        function countryChange(data) {
-            var link = $(data).find(':selected').attr('data-href');
-            if (link != "") {
-                $(".city-div").css("display", "block");
-                $('#citylist').load(link);
-                $('#citylist').prop('disabled', false);
-                $(".select2").select2();
-            } else {
-                $(".city-div").css("display", "none");
+            function countryChangeModal(data) {
+                var link = $(data).find(':selected').attr('data-href');
+                if (link != "") {
+                    $(".city-div-modal").css("display", "block");
+                    $('#citylist_modal').load(link);
+                    $("#search_filter_modal_btn").css("display", "block");
+
+                    $('#citylist_modal').prop('disabled', false);
+                    $(".select2").select2();
+                } else {
+                    $(".city-div_modal").css("display", "none");
+                }
             }
-        }
+
+            function countryChange(data) {
+                var link = $(data).find(':selected').attr('data-href');
+                if (link != "") {
+                    $(".city-div").css("display", "block");
+
+                    $('#citylist').load(link);
+
+                    $('#citylist').prop('disabled', false);
+                    $(".select2").select2();
+
+
+
+                } else {
+                    $(".city-div").css("display", "none");
+                }
+            }
+
+            function getCountry() {
+                let countryArray
+                var countryId = $('#country_id').val()
+                var countryModal = $('#country_id_modal').val()
+                if (countryId != null) {
+                    countryArray = countryId
+                } else {
+                    countryArray = countryModal
+                }
+                return countryArray
+            }
+
+            function getCities() {
+                let cityArray
+                var cityList = $('#citylist').val()
+                var cityListModal = $('#citylist_modal').val()
+                if (cityList != '') {
+                    cityArray = cityList
+                } else {
+                    cityArray = cityListModal
+                }
+                return cityArray
+            }
 
         function searchByProductName() {
             $(".ajax-loader").show();
             filter();
         }
         function filter() {
-            let filterlink = '';
-
-            if ($("#prod_name").val() != '') {
-                if (filterlink == '') {
-                    filterlink +=
-                        '{{ route('front.category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}' +
-                        '?search=' + $("#prod_name").val();
-                } else {
-                    filterlink += '&search=' + $("#prod_name").val();
-                }
-            }
-
-
-
-            $(".attribute-input").each(function() {
-                if ($(this).is(':checked')) {
-
+                let filterlink = '';
+                var searchText = 'search-modal-text';
+                if ($("#prod_name").val() != '') {
                     if (filterlink == '') {
                         filterlink +=
                             '{{ route('front.category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}' +
-                            '?' + $(this).attr('name') + '=' + $(this).val();
+                            '?search=' + $("#prod_name").val();
                     } else {
-                        filterlink += '&' + encodeURI($(this).attr('name')) + '=' + $(this).val();
-
+                        filterlink += '&search=' + $("#prod_name").val();
                     }
                 }
-            });
 
-            if ($("#sortby").val() != '') {
-                if (filterlink == '') {
-                    filterlink +=
-                        '{{ route('front.category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}' +
-                        '?' + $("#sortby").attr('name') + '=' + $("#sortby").val();
-                } else {
-                    filterlink += '&' + $("#sortby").attr('name') + '=' + $("#sortby").val();
+                $(".attribute-input").each(function() {
+                    if ($(this).is(':checked')) {
+
+                        if (filterlink == '') {
+                            filterlink +=
+                                '{{ route('front.category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}' +
+                                '?' + $(this).attr('name') + '=' + $(this).val();
+                        } else {
+                            filterlink += '&' + encodeURI($(this).attr('name')) + '=' + $(this).val();
+
+                        }
+                    }
+                });
+
+                if ($("#sortby").val() != '') {
+                    console.log('sortby',$("#sortby").val())
+                    if (filterlink == '') {
+                        filterlink +=
+                            '{{ route('front.category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}' +
+                            '?' + $("#sortby").attr('name') + '=' + $("#sortby").val();
+                    } else {
+                        filterlink += '&' + $("#sortby").attr('name') + '=' + $("#sortby").val();
+                    }
                 }
-            }
 
-            if ($("#country_id").val() != '') {
-                if (filterlink == '') {
-                    filterlink +=
-                        '{{ route('front.service_category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}' +
-                        '?' + $("#country_id").attr('name') + '=' + $("#country_id").val();
-                } else {
-                    filterlink += '&' + $("#country_id").attr('name') + '=' + $("#country_id").val();
+                if ($("#min_price").val() != '') {
+                    if (filterlink == '') {
+                        filterlink +=
+                            '{{ route('front.category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}' +
+                            '?' + $("#min_price").attr('name') + '=' + $("#min_price").val();
+                    } else {
+                        filterlink += '&' + $("#min_price").attr('name') + '=' + $("#min_price").val();
+                    }
                 }
-            }
-            if ($("#citylist").val() != '') {
-                if (filterlink == '') {
-                    filterlink +=
-                        '{{ route('front.service_category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}' +
-                        '?' + $("#citylist").attr('name') + '=' + $("#citylist").val();
-                } else {
-                    filterlink += '&' + $("#citylist").attr('name') + '=' + $("#citylist").val();
+
+                if ($("#max_price").val() != '') {
+                    if (filterlink == '') {
+                        filterlink +=
+                            '{{ route('front.category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}' +
+                            '?' + $("#max_price").attr('name') + '=' + $("#max_price").val();
+                    } else {
+                        filterlink += '&' + $("#max_price").attr('name') + '=' + $("#max_price").val();
+                    }
                 }
-            }
 
 
-            if ($("#min_price").val() != '') {
-                if (filterlink == '') {
-                    filterlink +=
-                        '{{ route('front.category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}' +
-                        '?' + $("#min_price").attr('name') + '=' + $("#min_price").val();
-                } else {
-                    filterlink += '&' + $("#min_price").attr('name') + '=' + $("#min_price").val();
+                if ($("#pageby").val() != '') {
+                    if (filterlink == '') {
+                        filterlink +=
+                            '{{ route('front.category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}' +
+                            '?' + $("#pageby").attr('name') + '=' + $("#pageby").val();
+                    } else {
+                        filterlink += '&' + $("#pageby").attr('name') + '=' + $("#pageby").val();
+                    }
                 }
-            }
 
-            if ($("#max_price").val() != '') {
-                if (filterlink == '') {
-                    filterlink +=
-                        '{{ route('front.category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}' +
-                        '?' + $("#max_price").attr('name') + '=' + $("#max_price").val();
-                } else {
-                    filterlink += '&' + $("#max_price").attr('name') + '=' + $("#max_price").val();
+                var countryArray = getCountry();
+                if (countryArray && countryArray.length > 0) {
+                    localStorage.setItem("countryIdLocalStore", countryArray);
+                    flag = 1
+                    if (filterlink == '') {
+                        searchText = 'search-text';
+                        filterlink +=
+                            '{{ route('front.category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}' +
+                            '?' + 'country_id[]' + '=' + countryArray;
+                    } else {
+                        filterlink += '&' + 'country_id[]' + '=' + countryArray;
+                    }
                 }
-            }
-
-
-            if ($("#pageby").val() != '') {
-                if (filterlink == '') {
-                    filterlink +=
-                        '{{ route('front.category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}' +
-                        '?' + $("#pageby").attr('name') + '=' + $("#pageby").val();
-                } else {
-                    filterlink += '&' + $("#pageby").attr('name') + '=' + $("#pageby").val();
+                var cityArray = getCities()
+                if (cityArray && cityArray.length > 0) {
+                    flag =0
+                    localStorage.setItem("cityIdLocalStore", JSON.stringify(cityArray));
+                    if (filterlink == '') {
+                        searchText = 'search-text';
+                        filterlink +=
+                            '{{ route('front.category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}' +
+                            '?' + 'city_id[]' + '=' + cityArray;
+                    } else {
+                        filterlink += '&' + 'city_id[]' + '=' + cityArray;
+                    }
                 }
+                if ($("#searchProduct").val() != '') {
+                    if (filterlink == '') {
+                        filterlink +=
+                            '{{ route('front.category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}' +
+                            '?' + $("#searchProduct").attr('name') + '=' + $("#searchProduct").val();
+                    } else {
+                        filterlink += '&' + $("#searchProduct").attr('name') + '=' + $("#searchProduct").val();
+                    }
+                }
+
+                if (check_view) {
+
+                    filterlink += '&view_check=' + check_view;
+                }
+
+
+                document.getElementById(searchText).innerText = "Searching...";
+                // $("#ajaxContent").load(encodeURI(filterlink), function(data) {
+                //     // add query string to pagination
+                //     document.getElementById(searchText).innerText = "";
+                //     addToPagination();
+                //     $(".ajax-loader").fadeOut(1000);
+
+                //     // $("#prod_name").val("")
+                // });
+                console.log('filterlink',filterlink)
+                $.ajax({
+                    url: encodeURI(filterlink),
+                    method: 'GET',
+                    success: function(data) {
+                        // Handle the response
+                        document.getElementById(searchText).innerText = "";
+                        addToPagination();
+                        $(".ajax-loader").fadeOut(1000);
+                        // $("#prod_name").val("");
+
+                        // Update the content of ajaxContent
+                        $("#ajaxContent").html(data);
+                        if (flag == 1) {
+                            var cityIdLocalStore = localStorage.getItem("cityIdLocalStore");
+                            $('#citylist').val(JSON.parse(cityIdLocalStore)).trigger('change');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle any errors
+                        console.error(error);
+                    }
+                });
             }
 
-            if (check_view) {
 
-                filterlink += '&view_check=' + check_view;
-            }
-            $("#ajaxContent").load(encodeURI(filterlink), function(data) {
-                // add query string to pagination
-                addToPagination();
-                $(".ajax-loader").fadeOut(1000);
-            });
-        }
+
+
+
+
+        // function filter() {
+        //     let filterlink = '';
+
+        //     if ($("#prod_name").val() != '') {
+        //         if (filterlink == '') {
+        //             filterlink +=
+        //                 '{{ route('front.category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}' +
+        //                 '?search=' + $("#prod_name").val();
+        //         } else {
+        //             filterlink += '&search=' + $("#prod_name").val();
+        //         }
+        //     }
+
+
+
+        //     $(".attribute-input").each(function() {
+        //         if ($(this).is(':checked')) {
+
+        //             if (filterlink == '') {
+        //                 filterlink +=
+        //                     '{{ route('front.category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}' +
+        //                     '?' + $(this).attr('name') + '=' + $(this).val();
+        //             } else {
+        //                 filterlink += '&' + encodeURI($(this).attr('name')) + '=' + $(this).val();
+
+        //             }
+        //         }
+        //     });
+
+        //     if ($("#sortby").val() != '') {
+        //         if (filterlink == '') {
+        //             filterlink +=
+        //                 '{{ route('front.category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}' +
+        //                 '?' + $("#sortby").attr('name') + '=' + $("#sortby").val();
+        //         } else {
+        //             filterlink += '&' + $("#sortby").attr('name') + '=' + $("#sortby").val();
+        //         }
+        //     }
+
+        //     if ($("#country_id").val() != '') {
+        //         if (filterlink == '') {
+        //             filterlink +=
+        //                 '{{ route('front.service_category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}' +
+        //                 '?' + $("#country_id").attr('name') + '=' + $("#country_id").val();
+        //         } else {
+        //             filterlink += '&' + $("#country_id").attr('name') + '=' + $("#country_id").val();
+        //         }
+        //     }
+        //     if ($("#citylist").val() != '') {
+        //         if (filterlink == '') {
+        //             filterlink +=
+        //                 '{{ route('front.service_category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}' +
+        //                 '?' + $("#citylist").attr('name') + '=' + $("#citylist").val();
+        //         } else {
+        //             filterlink += '&' + $("#citylist").attr('name') + '=' + $("#citylist").val();
+        //         }
+        //     }
+
+
+        //     if ($("#min_price").val() != '') {
+        //         if (filterlink == '') {
+        //             filterlink +=
+        //                 '{{ route('front.category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}' +
+        //                 '?' + $("#min_price").attr('name') + '=' + $("#min_price").val();
+        //         } else {
+        //             filterlink += '&' + $("#min_price").attr('name') + '=' + $("#min_price").val();
+        //         }
+        //     }
+
+        //     if ($("#max_price").val() != '') {
+        //         if (filterlink == '') {
+        //             filterlink +=
+        //                 '{{ route('front.category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}' +
+        //                 '?' + $("#max_price").attr('name') + '=' + $("#max_price").val();
+        //         } else {
+        //             filterlink += '&' + $("#max_price").attr('name') + '=' + $("#max_price").val();
+        //         }
+        //     }
+
+
+        //     if ($("#pageby").val() != '') {
+        //         if (filterlink == '') {
+        //             filterlink +=
+        //                 '{{ route('front.category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}' +
+        //                 '?' + $("#pageby").attr('name') + '=' + $("#pageby").val();
+        //         } else {
+        //             filterlink += '&' + $("#pageby").attr('name') + '=' + $("#pageby").val();
+        //         }
+        //     }
+
+        //     if (check_view) {
+
+        //         filterlink += '&view_check=' + check_view;
+        //     }
+        //     $("#ajaxContent").load(encodeURI(filterlink), function(data) {
+        //         // add query string to pagination
+        //         addToPagination();
+        //         $(".ajax-loader").fadeOut(1000);
+        //     });
+        // }
 
         //   append parameters to pagination links
         function addToPagination() {

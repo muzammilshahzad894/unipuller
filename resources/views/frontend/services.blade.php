@@ -40,17 +40,17 @@
                         <div class="showing-products pt-30 pb-50 border-2 border-bottom border-light" id="ajaxContent">
                             @if ($categoryType == 'product')
                                 @if (count($prods) > 0)
-                                @includeIf('partials.product.product-different-view')
-                                @include('frontend.pagination.service')
-                            @else
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="page-center">
-                                            <h4 class="text-center">{{ __('No Service Found.') }}</h4>
+                                    @includeIf('partials.product.product-different-view')
+                                    @include('frontend.pagination.service')
+                                @else
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="page-center">
+                                                <h4 class="text-center">{{ __('No Service Found.') }}</h4>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            @endif
+                                @endif
                             @else
                                 @if (count($services) > 0)
                                     @includeIf('partials.service.service-different-view')
@@ -115,17 +115,25 @@
     @section('script')
         <script>
             //s added by huma 
+            var flag = 0;
             $(document).ready(function() {
                 // Show the modal
-                $("#overlay").show();
-                $("#myModal").show();
+                var countryIdLocalStore = localStorage.getItem("countryIdLocalStore");
+                var cityIdLocalStore = localStorage.getItem("cityIdLocalStore");
+                if (countryIdLocalStore == null) {
+                    $("#overlay").show();
+                    $("#myModal").show();
 
-                // Close the modal when the close button is clicked
-                $(".close").click(function() {
-                    $("#myModal").hide();
-                    $("#overlay").hide();
+                    // Close the modal when the close button is clicked
+                    $(".close").click(function() {
+                        $("#myModal").hide();
+                        $("#overlay").hide();
 
-                });
+                    });
+                } else {
+                    $('#country_id').val(countryIdLocalStore).trigger('change');
+
+                }
             });
 
             function searchCategory() {
@@ -200,8 +208,12 @@
                     $(".city-div").css("display", "block");
 
                     $('#citylist').load(link);
+
                     $('#citylist').prop('disabled', false);
                     $(".select2").select2();
+
+
+
                 } else {
                     $(".city-div").css("display", "none");
                 }
@@ -303,6 +315,8 @@
 
                 var countryArray = getCountry();
                 if (countryArray && countryArray.length > 0) {
+                    localStorage.setItem("countryIdLocalStore", countryArray);
+                    flag = 1
                     if (filterlink == '') {
                         searchText = 'search-text';
                         filterlink +=
@@ -313,8 +327,9 @@
                     }
                 }
                 var cityArray = getCities()
-                console.log('cityArray', cityArray);
                 if (cityArray && cityArray.length > 0) {
+                    flag =0
+                    localStorage.setItem("cityIdLocalStore", JSON.stringify(cityArray));
                     if (filterlink == '') {
                         searchText = 'search-text';
                         filterlink +=
@@ -338,12 +353,11 @@
 
                     filterlink += '&view_check=' + check_view;
                 }
-                console.log('filterlink', filterlink);
+
 
                 document.getElementById(searchText).innerText = "Searching...";
                 // $("#ajaxContent").load(encodeURI(filterlink), function(data) {
                 //     // add query string to pagination
-                //     console.log(' i m here');
                 //     document.getElementById(searchText).innerText = "";
                 //     addToPagination();
                 //     $(".ajax-loader").fadeOut(1000);
@@ -355,7 +369,6 @@
                     method: 'GET',
                     success: function(data) {
                         // Handle the response
-                        console.log("I'm here");
                         document.getElementById(searchText).innerText = "";
                         addToPagination();
                         $(".ajax-loader").fadeOut(1000);
@@ -363,6 +376,10 @@
 
                         // Update the content of ajaxContent
                         $("#ajaxContent").html(data);
+                        if (flag == 1) {
+                            var cityIdLocalStore = localStorage.getItem("cityIdLocalStore");
+                            $('#citylist').val(JSON.parse(cityIdLocalStore)).trigger('change');
+                        }
                     },
                     error: function(xhr, status, error) {
                         // Handle any errors

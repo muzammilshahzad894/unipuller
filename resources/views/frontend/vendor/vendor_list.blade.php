@@ -153,7 +153,7 @@
 
                     <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12">
                         <div class="product-search-one">
-                            <form id="searchForm" class="search-form form-inline search-pill-shape"
+                            <form id="searchForm" class="search-form form-inline search-pill-shape bg-white"
                                 action="{{ route('vendor.list') }}" method="GET">
                                 <div class="select-appearance-none categori-container" id="countryForm">
                                     <select name="country" class="form-control categoris mx-2" id="country_select">

@@ -40,14 +40,16 @@ button.btn.btn-dark {
   box-shadow: none;
 }
 
-.top-header .middle-nav-bar .row {
-  background-color: #0F1111;
+.top-header .middle-nav-bar .row, .header-sticky {
+  background-color: #131921;
 }
 form#searchForm {
   border: 1px solid !important;
 }
-select#selectType {
-  width: 146px;
+select#selectType, select#selectTypeSticky {
+  /* width: 146px; */
+  width: auto;
+  padding: 0px !important;
 }
 #productCategory,
 #productCategorySticky,
@@ -62,10 +64,13 @@ select#selectType {
   background-color: white;
   border-radius: 51px;
 } */
-.top-header select#selectType {
-  height: 29px !important;
+.top-header select#selectType, select#selectTypeSticky {
+  /* height: 29px !important;
   border-right: 1px solid grey !important;
-  border-radius: 0px !important;
+  border-radius: 0px !important; */
+  height: 40px !important;
+  border-right: 1px solid grey !important;
+  border-radius: 29px 1px 0px 29px;
 }
 .top-header select.currency.selectors.nice,
 .ecommerce-header select.currency.selectors.nice
@@ -75,7 +80,8 @@ select#selectType {
     text-align: center;
 }
 .top-header .select2-container--default .select2-selection--single,
-.main-nav .select2-container--default .select2-selection--single{
+.main-nav .select2-container--default .select2-selection--single,
+.header-sticky .select2-selection.select2-selection--single{
   background-color: #fff;
   border: 0px !important;
   border-right: 1px solid grey !important;
@@ -516,6 +522,12 @@ background-color: var(--light-green) !important;
 .pay-strip-mobile{
   display:none !important;
 }
+.products-header .custom-select{
+  padding: 5px;
+  height: 40px;
+  text-align: center;
+}
+
 /* responsiveness  by huma*/
 @media (max-width: 2560px) {
   .card-img-sell-product {
@@ -642,6 +654,14 @@ background-color: var(--light-green) !important;
   .shop-list-page p.about_line {
     min-height: 55px;
     max-height: 55px;
+  }
+  .shop-list-page .product-search-one form#searchForm {
+    padding: 0px;
+  }
+  .shop-list-page .product-search-one select#country_select{
+    width: 142px;
+    height: 44px;
+    padding: 5px 6px 5px 6px;
   }
 }
 @media (max-width: 375px) {

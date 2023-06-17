@@ -6,7 +6,7 @@ if(isset($_GET['color']))
   $color = '#'.$_GET['color'];
 }
 else {
-  $color = '#c9030f';
+  $color = '#38b2ac';
 }
 
 if(isset($_GET['header_color']))
