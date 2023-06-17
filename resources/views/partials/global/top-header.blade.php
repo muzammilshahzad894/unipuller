@@ -65,8 +65,10 @@
             <div class="col-lg-6 sm-mx-none">
                 @php
                     $categoryType = request()->segment(1);
+                    $lastSegment = request()->segment(2);
+
                 @endphp
-                @if ($categoryType != 'service_category' && $categoryType != 'category'  )
+                @if ($categoryType != 'service_category' && $categoryType != 'category' && $categoryType!='shop' && $lastSegment !='list'  )
                     <div class="product-search-one flex-grow-1 global-search">
                         <form id="searchForm" class="search-form form-inline search-pill-shape" action=""
                             method="GET">
