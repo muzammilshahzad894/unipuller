@@ -63,7 +63,7 @@
         <div class="products-header">
             <div class="products-header-right justify-content-first">
 
-                <div class="mb-3 mx-2">
+                <div class="mb-3 mx-md-2 mx-sm-0">
                     <select name="country_id[]" class="form-control select2 country" id="country_id"
                         onchange="countryChange(this)">
                         <option value="" disabled selected>Select Country</option>
@@ -86,16 +86,16 @@
             </div>
         </div>
     </div>
-    <div class="products-header-right">
-        <div class="products-view px-5">
-            <button class="btn btn-sm" id="productBtn" onclick="filterProducts()">Product</button>
-            <button class="btn btn-sm btn-primary" id="serviceBtn" onclick="filterServices()">Service</button>
+    <div class="products-header-right text-center">
+        <div class="products-view">
+            <button class="btn btn-sm  @if ($categoryType=='product') btn-primary @endif" id="productBtn" onclick="filterProducts()">Product</button>
+            <button class="btn btn-sm  @if ($categoryType!='product') btn-primary @endif" id="serviceBtn" onclick="filterServices()">Service</button>
             <input type="hidden" value="service" id="searchProduct" name="searchProduct">
 
         </div>
-        <form class="woocommerce-ordering" method="get">
-            <select class="custom-select bg-dark text-white custom-select-sm" name="sortby" id="sortby">
-                <option selected>Sort By </option>
+        <form class="woocommerce-ordering m-0" method="get">
+            <select class="custom-select bg-dark text-white custom-select-sm m-0" name="sortby" id="sortby">
+                <option selected>Sort </option>
                 <option value="date_desc">Latest Product</option>
                 <option value="date_asc">Oldest Product</option>
                 <option value="price_asc">Lowest Price</option>

@@ -3,14 +3,19 @@
         <div class="dashbaord-sidebar-close d-xl-none d-lg-none">
     <i class="fas fa-times"></i>
   </div>
+  
         <form id="catalogForm" action="{{ route('front.service_category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}" method="GET">
 
         <div id="woocommerce_product_categories-4" class="widget woocommerce widget_product_categories widget-toggle">
             <h2 class="widget-title">{{ __('Service categories') }}</h2>
             <ul class="product-categories">
+                @php
+                 $segments = Request::segments();
+                $lastSegment = last($segments);
+                @endphp
                 @foreach (App\Models\ServiceCategory::where('language_id',$langg->id)->where('status',1)->get() as $category)
-                <li class="cat-item cat-parent">
-                    <a href="{{route('front.service_category', $category->slug)}}{{!empty(request()->input('search')) ? '?search='.request()->input('search') : ''}}" class="category-link" id="cat">{{ $category->name }} <span class="count"></span></a>
+                <li class="cat-item cat-parent px-2 @if($lastSegment== $category->slug) bg-dark text-white @endif">
+                    <a href="{{route('front.service_category', $category->slug)}}{{!empty(request()->input('search')) ? '?search='.request()->input('search') : ''}}" class="category-link @if($lastSegment== $category->slug)  text-white @endif" id="cat">{{ $category->name }} <span class="count"></span></a>
 
                     {{-- @if($category->servicesubs->count() > 0)
                         <span class="has-child"></span>
@@ -134,8 +139,10 @@
             </div>
             <div class="col-12">
                 <div class="product-style-2 owl-carousel owl-nav-hover-primary nav-top-right single-carousel dot-disable product-list e-bg-white">
-
-                    @foreach (array_chunk($latest_services->toArray(),3) as $item)
+                    @php
+                        $latest = $categoryType=='product'?$latest_products:$latest_services;
+                    @endphp
+                    @foreach (array_chunk($latest->toArray(),3) as $item)
 
                     <div class="item">
                         <div class="row row-cols-1">

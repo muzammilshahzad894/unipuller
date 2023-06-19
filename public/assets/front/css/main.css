@@ -663,6 +663,19 @@ background-color: var(--light-green) !important;
     height: 44px;
     padding: 5px 6px 5px 6px;
   }
+  .products-header-right{
+    display: grid !important;
+    justify-content: center!important;
+
+  }
+  .products-header.d-flex.align-items-center{
+    display: grid !important;
+    justify-content: center!important;
+
+  }
+  .products-header-right .mb-3.mx-2{
+    margin:5px !important
+  }
 }
 @media (max-width: 375px) {
   .main-features-section .card .card-img-sell-product {
@@ -671,9 +684,25 @@ background-color: var(--light-green) !important;
   .main-features-section .card-item {
     height: 140px;
   }
+  .products-header-right{
+    display: grid !important;
+    justify-content: center!important;
+
+  }
+  .products-header.d-flex.align-items-center{
+    display: grid !important;
+  }
 }
 @media (max-width: 320px) {
   .main-features-section .card .card-img-sell-product {
     height: 235px;
+  }
+  .products-header-right{
+    display: grid !important;
+    justify-content: center!important;
+
+  }
+  .products-header.d-flex.align-items-center{
+    display: grid !important;
   }
 }

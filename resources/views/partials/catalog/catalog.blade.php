@@ -6,7 +6,10 @@
         <form id="catalogForm"
             action="{{ route('front.category', [Request::route('category'), Request::route('subcategory'), Request::route('childcategory')]) }}"
             method="GET">
-
+            @php
+            $segments = Request::segments();
+           $lastSegment = last($segments);
+           @endphp
             <div id="woocommerce_product_categories-4" class="widget woocommerce widget_product_categories widget-toggle">
                 <h2 class="widget-title">{{ __('Product categories') }}</h2>
                 <ul class="product-categories">
@@ -20,7 +23,7 @@
                                 <span class="has-child"></span>
                                 <ul class="children">
                                     @foreach (App\Models\Subcategory::where('category_id', $category->id)->where('type', 1)->get() as $subcategory)
-                                        <li class="cat-item cat-parent">
+                                        <li class="cat-item cat-parent @if($lastSegment== $category->slug)  text-white @endif">
                                             <a href="{{ route('front.category', [$category->slug, $subcategory->slug]) }}{{ !empty(request()->input('search')) ? '?search=' . request()->input('search') : '' }}"
                                                 class="category-link {{ isset($subcat) ? ($subcat->id == $subcategory->id ? 'active' : '') : '' }}">{{ $subcategory->name }}
                                                 <span class="count"></span></a>

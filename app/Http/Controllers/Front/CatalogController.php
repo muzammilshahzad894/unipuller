@@ -389,7 +389,8 @@ class CatalogController extends FrontBaseController
             $data['countries'] = Country::where('status', 1)
                 ->orderby('id', 'asc')
                 ->get();
-            $data['categoryType'] = 'product';
+            // $data['categoryType'] = 'product';
+            $data['categoryType'] =  $request->searchProduct?'product':'service';
             //e added by huma
         } else {
             $data['latest_services'] = UserService::with('user')
@@ -558,10 +559,10 @@ class CatalogController extends FrontBaseController
                 ->orderby('id', 'asc')
                 ->get();
             //s added by huma
-            $data['categoryType'] = 'service';
+                $data['categoryType'] =  $request->searchProduct?'product':'service';
+            // $data['categoryType'] = 'service';
             //e added by huma
         }
-
         if ($request->ajax()) {
             $data['ajax_check'] = 1;
             return view('frontend.ajax.service_category', $data);

@@ -1,11 +1,25 @@
- <div class="d-flex justify-content-center align-items-center pt-3" id="custom-pagination">
+@if ($categoryType == 'product')
+<div class="d-flex justify-content-center align-items-center pt-3" id="custom-pagination">
     <div class="pagination-style-one">
         <nav aria-label="Page navigation example">
             <ul class="pagination">
 
-                {{ $services->links() }}
+                {{ $prods->links() }}
 
             </ul>
         </nav>
     </div>
 </div>
+@else
+    <div class="d-flex justify-content-center align-items-center pt-3" id="custom-pagination">
+        <div class="pagination-style-one">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+    
+                    {{ $services->links() }}
+    
+                </ul>
+            </nav>
+        </div>
+    </div>
+@endif

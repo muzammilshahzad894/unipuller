@@ -43,10 +43,11 @@
                                     @includeIf('partials.product.product-different-view')
                                     @include('frontend.pagination.service')
                                 @else
+                                
                                     <div class="card">
                                         <div class="card-body">
                                             <div class="page-center">
-                                                <h4 class="text-center">{{ __('No Service Found.') }}</h4>
+                                                <h4 class="text-center">{{ __('No Product Found.') }}</h4>
                                             </div>
                                         </div>
                                     </div>

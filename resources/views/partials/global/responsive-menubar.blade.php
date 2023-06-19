@@ -1,4 +1,4 @@
-<div class="main-nav d-lg-block d-none bg-white">
+<div class="main-nav d-lg-block d-none ">
     <div class="container-fluid px-lg-5 border-bottom">
         <div class="row">
             <div class="col-xl-12 col-md-12 d-flex justify-content-center">
@@ -82,7 +82,7 @@
 
     </div>
 </div>
-<div class="header-sticky  py-10">
+<div class="header-sticky  py-10" style="background-color: #131921 !important">
     <div class="container">
         <div class="row align-items-center d-flex justify-content-between">
             <div class="col-xxl-2 col-xl-2 col-lg-2 col-6 order-lg-1">

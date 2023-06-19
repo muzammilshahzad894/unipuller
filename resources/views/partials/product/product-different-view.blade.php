@@ -67,6 +67,7 @@
    @endforeach
 </div>
 @else
+
 <div class="row row-cols-xl-4 row-cols-md-3 row-cols-sm-2 row-cols-1 product-style-1 e-title-hover-primary e-image-bg-light e-hover-image-zoom e-info-center">
    @foreach($prods as $product)
    <div class="col" >
